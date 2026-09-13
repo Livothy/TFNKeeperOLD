@@ -91,6 +91,18 @@ class SubmissionController extends Controller {
         $prompt = $request->all()['prompt_id'] ?? null;
         $promptCriteria = $prompt ? PromptCriterion::where('prompt_id', $prompt)->pluck('criterion_id')->toArray() : null;
 
+         if (config('lorekeeper.settings.allow_gallery_submissions_on_prompts')) {
+            $collaboratorIds = GalleryCollaborator::where('user_id', Auth::user()->id)->where('has_approved', 1)->pluck('gallery_submission_id')->toArray();
+
+            $gallerySubmissions = GallerySubmission::where('is_visible', true)->where('user_id', Auth::user()->id)->orWhereIn('id', $collaboratorIds)->orderBy('id', 'DESC')->get()->pluck('title', 'id');
+
+            $gallerySubmissions = $gallerySubmissions->map(function ($item, $key) {
+                return '"'.$item.'" by '.Auth::user()->name;
+            });
+        } else {
+            $gallerySubmissions = [];
+        }
+
         return view('home.create_submission', [
             'closed'  => $closed,
             'isClaim' => false,
@@ -107,6 +119,7 @@ class SubmissionController extends Controller {
             'page'                    => 'submission',
             'expanded_rewards'        => config('lorekeeper.extensions.character_reward_expansion.expanded'),
             'criteria'               	=> $prompt ? Criterion::active()->whereIn('id', $promptCriteria)->orderBy('name')->pluck('name', 'id') : null,
+            'userGallerySubmissions' 	=> $gallerySubmissions,
         ]));
     }
 
