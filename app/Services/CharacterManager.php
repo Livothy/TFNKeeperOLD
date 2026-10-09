@@ -17,6 +17,7 @@ use App\Models\Marking\Marking;
 use App\Models\Sales\SalesCharacter;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
+use App\Models\WorldExpansion\FactionRankMember;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
@@ -1319,9 +1320,40 @@ class CharacterManager extends Service {
             }
             $character->save();
 
-            if (!$character->is_myo_slot && config('lorekeeper.extensions.character_TH_profile_link')) {
+            // Update the character's location
+            if (isset($data['location']) && $data['location']) {
+                $character->home_id = (int) $data['location'];
+            }
+            $character->save();
+
+            // Update the character's faction
+            if (isset($data['faction']) && $data['faction']) {
+                if ($character->faction_id) {
+                    $old = $character->faction_id;
+                }
+
+                $character->faction_id = (int) $data['faction'];
+                $character->save();
+
+                // Reset standing/remove from closed rank
+                if (isset($old) && $character->faction_id != $old) {
+                    $standing = $character->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();
+                    if ($standing && $standing->quantity > 0) {
+                        if (!$debit = (new CurrencyManager)->debitCurrency($character, null, 'Changed Factions', null, $standing, $standing->quantity)) {
+                            throw new \Exception('Failed to reset standing.');
+                        }
+                    }
+
+                    if (FactionRankMember::where('member_type', 'character')->where('member_id', $character->id)->first()) {
+                        FactionRankMember::where('member_type', 'character')->where('member_id', $character->id)->first()->delete();
+                    }
+                }
+            }
+
+            if (!$character->is_myo_slot && Config::get('lorekeeper.extensions.character_TH_profile_link')) {
                 $character->profile->link = $data['link'];
             }
+
             $character->profile->save();
 
             $character->profile->text = $data['text'];

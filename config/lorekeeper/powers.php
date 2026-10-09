@@ -71,4 +71,10 @@ return [
         'name'        => 'Manage User Ads',
         'description' => 'Allow rank to edit/delete user ads.',
     ],
+
+    'manage_world' => [
+        'name'        => 'Manage World',
+        'description' => 'Allow rank to edit world information related to the World Expansion extension.',
+    ],
+
 ];

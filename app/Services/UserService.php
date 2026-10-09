@@ -14,6 +14,9 @@ use App\Models\Trade;
 use App\Models\User\User;
 use App\Models\User\UserPage;
 use App\Models\User\UserUpdateLog;
+use App\Models\WorldExpansion\Faction;
+use App\Models\WorldExpansion\FactionRankMember;
+use App\Models\WorldExpansion\Location;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -124,6 +127,100 @@ class UserService extends Service {
         }
 
         return $user;
+    }
+
+    /**
+     * Updates a user. Used in modifying the admin user on the command line.
+     *
+     * @param mixed $id
+     * @param mixed $user
+     *
+     * @return User
+     */
+    public function updateLocation($id, $user) {
+        DB::beginTransaction();
+
+        try {
+            $location = Location::find($id);
+            if (!$location) {
+                throw new \Exception('Not a valid location.');
+            }
+            if (!$location->is_user_home) {
+                throw new \Exception('Not a location a user can have as their home.');
+            }
+
+            $limit = Settings::get('WE_change_timelimit');
+
+            if ($user->canChangeLocation) {
+                $user->home_id = $id;
+                $user->home_changed = Carbon::now();
+                $user->save();
+            } else {
+                throw new \Exception("You can't change your location yet!");
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a user. Used in modifying the admin user on the command line.
+     *
+     * @param mixed $id
+     * @param mixed $user
+     *
+     * @return User
+     */
+    public function updateFaction($id, $user) {
+        DB::beginTransaction();
+
+        try {
+            if ($user->faction) {
+                $old = $user->faction;
+            }
+            $faction = Faction::find($id);
+            if ($id == 0) {
+                $id = null;
+            } elseif (!$faction) {
+                throw new \Exception('Not a valid faction.');
+            } elseif (!$faction->is_user_faction) {
+                throw new \Exception('Not a faction a user can join.');
+            }
+
+            $limit = Settings::get('WE_change_timelimit');
+
+            if ($user->canChangeFaction) {
+                $user->faction_id = $id;
+                $user->faction_changed = Carbon::now();
+                $user->save();
+            } else {
+                throw new \Exception("You can't change your faction yet!");
+            }
+
+            // Reset standing/remove from closed rank
+            if (($id == null) || (isset($old) && $faction->id != $old->id)) {
+                $standing = $user->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();
+                if ($standing && $standing->quantity > 0) {
+                    if (!$debit = (new CurrencyManager)->debitCurrency($user, null, 'Changed Factions', null, $standing, $standing->quantity)) {
+                        throw new \Exception('Failed to reset standing.');
+                    }
+                }
+
+                if (FactionRankMember::where('member_type', 'user')->where('member_id', $user->id)->first()) {
+                    FactionRankMember::where('member_type', 'user')->where('member_id', $user->id)->first()->delete();
+                }
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
     }
 
     /**
