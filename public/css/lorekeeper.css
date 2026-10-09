@@ -994,3 +994,46 @@ tr.accountbound {
     margin: 1%;
     max-width: 90%;
 }
+
+/* RAIDS *************************************************************************************/
+
+.raid-display {
+    aspect-ratio: 3 / 1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    position: relative;
+    max-width: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.raid-display .boss-image {
+    max-height: 100%;
+    width: auto;
+}
+
+.raid-display .boss-image img {
+    max-height: 100%;
+    width: auto;
+}
+
+.raid-boss-health {
+    position: absolute;
+    top: 0.75rem;
+}
+
+@media only screen and (max-width: 1100px) {
+    .raid-display {
+        aspect-ratio: 2 / 1;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .raid-display {
+        aspect-ratio: unset;
+    }
+}

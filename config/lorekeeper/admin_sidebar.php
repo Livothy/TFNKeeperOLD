@@ -221,6 +221,23 @@ return [
             ],
         ],
     ],
+    'Raids'       => [
+        'power' => 'edit_data',
+        'links' => [
+            [
+                'name' => 'Raids',
+                'url'  => 'admin/data/raids',
+            ],
+            [
+                'name' => 'Raid Bosses',
+                'url'  => 'admin/data/raid-bosses',
+            ],
+            [
+                'name' => 'Raid Logs',
+                'url'  => 'admin/data/raid-logs',
+            ],
+        ],
+    ],
     'Raffles'    => [
         'power' => 'manage_raffles',
         'links' => [

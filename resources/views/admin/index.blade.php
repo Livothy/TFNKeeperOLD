@@ -8,7 +8,44 @@
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Home' => 'admin']) !!}
 
     <h1>
-        Admin Dashboard</h1>
+        Admin Dashboard
+    </h1>
+
+    @if (Auth::user()->hasPower('manage_raids'))
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @if ($activeRaid->count())
+                        <span class="badge badge-success">Active</span>
+                    @else
+                        <span class="badge badge-secondary">Inactive</span>
+                    @endif
+                    Ongoing {{ ucfirst(__('raids.raid')) }}
+                </h5>
+                <p class="card-text">
+                    @if ($activeRaid->count())
+                        @if ($activeRaid->first()->imageUrl)
+                            <div class="mb-2" style="background: transparent url('{{ $activeRaid->first()->imageUrl }}') no-repeat center; background-size: cover; height: 50px;"></div>
+                        @endif
+                        @if ($activeRaid->first()->status == 2)
+                            The active {{ __('raids.raid') }} {!! $activeRaid->first()->displayName !!} has been <b>defeated</b> and participation has closed! <b>Rewards have yet to be distributed.</b> Please <a href="{{ $activeRaid->first()->adminUrl }}">proceed to the
+                                {{ __('raids.raid') }}'s admin panel page</a> to do so.
+                        @else
+                            There is an ongoing {{ __('raids.raid') }}: {!! $activeRaid->first()->displayName !!}! Visit <a href="{{ $activeRaid->first()->adminUrl }}">the {{ __('raids.raid') }}'s admin panel page</a> if you wish to review its settings.
+                        @endif
+                    @else
+                        There isn't a {{ __('raids.raid') }} active and open for participation at the moment.
+                    @endif
+                </p>
+                <div class="text-right">
+                    <a href="{{ url('admin/data/' . __('raids.raids')) }}" class="card-link">
+                        View {{ ucfirst(__('raids.raids')) }} Index <span class="fas fa-caret-right ml-1"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="row">
         @if (Auth::user()->hasPower('manage_submissions'))
             <div class="col-sm-6">

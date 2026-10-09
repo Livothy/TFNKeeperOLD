@@ -437,4 +437,18 @@ return [
         'message' => '<a href="{sender_url}">{sender}</a> has added you as a participant on a gallery submission. (<a href="{url}">View Submission</a>)',
         'url'     => 'gallery/view/{submission_id}',
     ],
+
+    // RAID_PARTICIPANT_REWARDS
+    4200  => [
+        'name'    => 'Participation Rewards Distributed',
+        'message' => 'You managed to do <b>{damage}</b> to the {raid_word} <a href="{raid_url}">{raid_name}</a> and have been rewarded for your efforts! Please check your possessions.',
+        'url'     => '',
+    ],
+
+    // RAID_PARTICIPANT_REWARDLESS
+    4201  => [
+        'name'    => 'No Rewards Received',
+        'message' => 'You didn\'t do sufficient damage to the {raid_word} <a href="{raid_url}">{raid_name}</a> to qualify for any rewards. Maybe next time...',
+        'url'     => '',
+    ],
 ];

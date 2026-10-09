@@ -9,6 +9,7 @@ use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Currency\Currency;
 use App\Models\Gallery\GallerySubmission;
+use App\Models\Raid\Raid;
 use App\Models\Report\Report;
 use App\Models\Submission\Submission;
 use App\Models\Trade;
@@ -27,6 +28,10 @@ class HomeController extends Controller {
         $openTransfersQueue = Settings::get('open_transfers_queue');
         $galleryRequireApproval = Settings::get('gallery_submissions_require_approval');
         $galleryCurrencyAwards = Settings::get('gallery_submissions_reward_currency');
+        $activeRaid = null;
+        if (Auth::user()->hasPower('manage_raids')) {
+            $activeRaid = Raid::whereBetween('status', [1, 2])->get();
+        }
 
         return view('admin.index', [
             'submissionCount'        => Submission::where('status', 'Pending')->whereNotNull('prompt_id')->count(),
@@ -42,6 +47,7 @@ class HomeController extends Controller {
             'galleryCurrencyAwards'  => $galleryCurrencyAwards,
             'gallerySubmissionCount' => GallerySubmission::collaboratorApproved()->where('status', 'Pending')->count(),
             'galleryAwardCount'      => GallerySubmission::requiresAward()->where('is_valued', 0)->count(),
+            'activeRaid'             => $activeRaid,
         ]);
     }
 

@@ -284,6 +284,39 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('random/generator/sort', 'GeneratorController@postSortGenerator');
 });
 
+// RAIDS
+Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:manage_raids'], function () {
+    Route::get(__('raids.raids'), 'RaidController@getRaidIndex');
+    Route::get(__('raids.raids').'/create', 'RaidController@getCreateRaid');
+    Route::get(__('raids.raids').'/edit/{id}', 'RaidController@getEditRaid');
+    Route::get(__('raids.raids').'/delete/{id}', 'RaidController@getDeleteRaid');
+    Route::get(__('raids.raids').'/start/{id}', 'RaidController@getStartRaid');
+    Route::get(__('raids.raids').'/end/{id}', 'RaidController@getEndRaid');
+    Route::get(__('raids.raids').'/reward/{id}', 'RaidController@getRewardRaid');
+
+    Route::post(__('raids.raids').'/create', 'RaidController@postCreateEditRaid');
+    Route::post(__('raids.raids').'/edit/{id?}', 'RaidController@postCreateEditRaid');
+    Route::post(__('raids.raids').'/delete/{id}', 'RaidController@postDeleteRaid');
+    Route::post(__('raids.raids').'/start/{id}', 'RaidController@postStartRaid');
+    Route::post(__('raids.raids').'/end/{id}', 'RaidController@postEndRaid');
+    Route::post(__('raids.raids').'/reward/{id}', 'RaidController@postRewardRaid');
+
+    Route::get(__('raids.raid').'-'.__('raids.bosses'), 'RaidController@getRaidBossIndex');
+    Route::get(__('raids.raid').'-'.__('raids.bosses').'/create/{id}', 'RaidController@getCreateRaidBoss');
+    Route::get(__('raids.raid').'-'.__('raids.bosses').'/edit/{id}', 'RaidController@getEditRaidBoss');
+    Route::get(__('raids.raid').'-'.__('raids.bosses').'/delete/{id}', 'RaidController@getDeleteRaidBoss');
+    Route::post(__('raids.raid').'-'.__('raids.bosses').'/create/{id}', 'RaidController@postCreateRaidBoss');
+    Route::post(__('raids.raid').'-'.__('raids.bosses').'/edit/{id?}', 'RaidController@postEditRaidBoss');
+    Route::post(__('raids.raid').'-'.__('raids.bosses').'/delete/{id}', 'RaidController@postDeleteRaidBoss');
+
+    Route::get(__('raids.raid').'-'.__('raids.bosses').'/{id}/image/create', 'RaidController@getCreateRaidBossImage');
+    Route::get(__('raids.raid').'-'.__('raids.bosses').'/{id}/image/edit/{imageId}', 'RaidController@getEditRaidBossImage');
+    Route::get(__('raids.raid').'-'.__('raids.bosses').'/{id}/image/delete/{imageId}', 'RaidController@getDeleteRaidBossImage');
+    Route::post(__('raids.raid').'-'.__('raids.bosses').'/{id}/image/create', 'RaidController@postCreateEditRaidBossImage');
+    Route::post(__('raids.raid').'-'.__('raids.bosses').'/{id}/image/edit/{imageId?}', 'RaidController@postCreateEditRaidBossImage');
+    Route::post(__('raids.raid').'-'.__('raids.bosses').'/{id}/image/delete/{imageId}', 'RaidController@postDeleteRaidBossImage');
+});
+
 // PAGES
 Route::group(['prefix' => 'pages', 'middleware' => 'power:edit_pages'], function () {
     Route::get('/', 'PageController@getIndex');

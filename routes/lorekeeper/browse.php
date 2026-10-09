@@ -114,6 +114,17 @@ Route::group(['prefix' => 'world'], function () {
     Route::get('character-categories', 'WorldController@getCharacterCategories');
 });
 
+// RAIDS
+Route::group(['prefix' => __('raids.raids')], function () {
+    Route::get('/', 'RaidController@getIndex');
+    Route::get('data/{id}', 'RaidController@getRaid');
+    Route::get('current', 'RaidController@getCurrentRaid');
+
+    // RAID BOSSES
+    Route::get(__('raids.bosses'), 'RaidController@getBosses');
+    Route::get(__('raids.bosses').'/{id}', 'RaidController@getBoss');
+});
+
 Route::group(['prefix' => 'prompts'], function () {
     Route::get('/', 'PromptsController@getIndex');
     Route::get('prompt-categories', 'PromptsController@getPromptCategories');

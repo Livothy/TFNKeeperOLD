@@ -220,7 +220,6 @@ Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function () {
 /**************************************************************************************************
     Shops
 **************************************************************************************************/
-
 Route::group(['prefix' => 'shops'], function () {
     Route::post('buy', 'ShopController@postBuy');
     Route::get('history', 'ShopController@getPurchaseHistory');
@@ -249,4 +248,12 @@ Route::group(['prefix' => 'user_ads'], function () {
     Route::get('delete/{id}', 'Users\UserAdsController@getDeleteUserAds');
     Route::post('create', 'Users\UserAdsController@postCreateEditUserAds');
     Route::post('delete/{id}', 'Users\UserAdsController@postDeleteUserAds');
+});
+
+/**************************************************************************************************
+    Raids
+**************************************************************************************************/
+Route::group(['prefix' => __('raids.raids')], function () {
+    Route::post('attack/{id}/'.__('raids.boss').'/{bossId}', 'RaidController@postAttackRaid');
+    Route::get('leaderboard/{id}', 'RaidController@getUserLeaderboard');
 });
