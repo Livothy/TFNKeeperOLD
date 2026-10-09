@@ -43,7 +43,7 @@ class SettingsController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAjaxSearchSettings() {
-        $tables = DB::select("SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name NOT LIKE '%log%'");
+        $tables = DB::select("SELECT table_name AS TABLE_NAME FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name NOT LIKE '%log%'");
         $tableNames = array_map(function ($table) {
             return $table->TABLE_NAME;
         }, $tables);
@@ -91,8 +91,12 @@ class SettingsController extends Controller {
 
         //Custom Tables
         $c_tables = [];
-        if ($data['custom_tables'] && count($data['custom_tables']) > 0) {
+        if (!empty($data['custom_tables']['table_name'])) {
             foreach ($data['custom_tables']['table_name'] as $i => $table_name) {
+                // The blank template row only submits a table name; skip any row without its columns chosen
+                if (!$table_name || !isset($data['custom_tables']['title'][$i], $data['custom_tables']['identifier'][$i], $data['custom_tables']['description'][$i])) {
+                    continue;
+                }
                 $model = $this->getModelFromTable($table_name);
 
                 $c_tables[$table_name] = [

@@ -202,7 +202,7 @@ class IndexSitePages extends Command {
                     break;
                 case 'users':
 
-                    $users = User::all();
+                    $users = User::visible()->get();
                     $bar = $this->output->createProgressBar(count($users));
                     $bar->start();
                     foreach ($users as $user) {
@@ -225,7 +225,7 @@ class IndexSitePages extends Command {
                     break;
                 case 'items':
 
-                    $items = Item::all();
+                    $items = Item::released()->get();
                     $bar = $this->output->createProgressBar(count($items));
                     $bar->start();
                     foreach ($items as $item) {
