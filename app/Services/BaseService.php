@@ -116,7 +116,11 @@ class BaseService extends Service {
 
         try {
             // Check first if the base is currently in use
-            if (DB::table('character_bases')->where('base_id', $base->id)->exists()) {
+            // Characters store their base as an id, or "id|id" for chimeras; markings can also reference a base.
+            $baseInUse = DB::table('characters')->where(function ($query) use ($base) {
+                $query->where('base', $base->id)->orWhere('base', 'like', $base->id.'|%')->orWhere('base', 'like', '%|'.$base->id);
+            })->exists() || DB::table('character_markings')->where('base_id', $base->id)->exists();
+            if ($baseInUse) {
                 throw new \Exception('A character with this base exists. Please remove the base first.');
             }
 

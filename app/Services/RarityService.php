@@ -113,6 +113,11 @@ class RarityService extends Service {
                 throw new \Exception('A character or character image with this rarity exists. Please change its rarity first.');
             }
 
+            // Design Hub: markings are grouped by rarity, so a rarity in use by a marking cannot be removed
+            if (DB::table('markings')->where('rarity_id', $rarity->id)->exists()) {
+                throw new \Exception('A marking with this rarity exists. Please change its rarity first.');
+            }
+
             if ($rarity->has_image) {
                 $this->deleteImage($rarity->rarityImagePath, $rarity->rarityImageFileName);
             }

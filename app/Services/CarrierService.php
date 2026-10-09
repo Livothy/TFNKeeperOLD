@@ -45,7 +45,7 @@ class CarrierService extends Service {
             $carrier = Carrier::create($data);
 
             if (isset($data['attached_markings']) && $data['attached_markings']) {
-                foreach ($data['attached_markings'] as $marking_id => $name) {
+                foreach ($data['attached_markings'] as $marking_id) {
                     $relation = MarkingCarrier::create([
                         'marking_id' => $marking_id,
                         'carrier_id' => $carrier->id,
@@ -140,7 +140,7 @@ class CarrierService extends Service {
 
         try {
             // Check first if the carrier is currently in use
-            if (DB::table('carriers')->where('id', $carrier->id)->exists()) {
+            if (DB::table('character_markings')->where('carrier_id', $carrier->id)->exists()) {
                 throw new \Exception('A character with this carrier exists. Please remove the carrier first.');
             }
 
@@ -151,6 +151,7 @@ class CarrierService extends Service {
             if (file_exists($carrier->imageDirectory.'/'.$carrier->imageFileName)) {
                 $this->deleteImage($carrier->imagePath, $carrier->imageFileName);
             }
+            MarkingCarrier::where('carrier_id', $carrier->id)->delete();
             $carrier->delete();
 
             return $this->commitReturn(true);

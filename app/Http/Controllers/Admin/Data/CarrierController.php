@@ -52,8 +52,9 @@ class CarrierController extends Controller {
      */
     public function getCreateCarrier() {
         return view('admin.carriers.create_edit_carrier', [
-            'carrier'    => new Carrier,
-            'markings'   => Marking::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
+            'carrier'         => new Carrier,
+            'active_markings' => [],
+            'markings'        => Marking::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 

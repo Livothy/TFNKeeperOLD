@@ -132,7 +132,7 @@ class MarkingService extends Service {
 
         try {
             // Check first if the marking is currently in use
-            if (DB::table('characters')->where('markings', 'like', '%'.$marking->id.'%')->exists()) {
+            if (DB::table('character_markings')->where('marking_id', $marking->id)->exists()) {
                 throw new \Exception('A character with this marking exists. Please remove the marking first.');
             }
 
@@ -143,6 +143,7 @@ class MarkingService extends Service {
             if (file_exists($marking->imageDirectory.'/'.$marking->imageFileName)) {
                 $this->deleteImage($marking->imagePath, $marking->imageFileName);
             }
+            DB::table('marking_carriers')->where('marking_id', $marking->id)->delete();
             $marking->delete();
 
             return $this->commitReturn(true);
