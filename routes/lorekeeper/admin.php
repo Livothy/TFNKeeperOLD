@@ -282,6 +282,16 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('random/generator/edit/{id}', 'GeneratorController@postCreateEditRandomGenerator');
     Route::post('random/generator/delete/{id}', 'GeneratorController@postDeleteRandomGenerator');
     Route::post('random/generator/sort', 'GeneratorController@postSortGenerator');
+
+    // DAILIES
+    Route::get('dailies', 'DailyController@getIndex');
+    Route::get('dailies/create', 'DailyController@getCreateDaily');
+    Route::get('dailies/edit/{id}', 'DailyController@getEditDaily');
+    Route::get('dailies/delete/{id}', 'DailyController@getDeleteDaily');
+    Route::post('dailies/create', 'DailyController@postCreateEditDaily');
+    Route::post('dailies/edit/{id?}', 'DailyController@postCreateEditDaily');
+    Route::post('dailies/delete/{id}', 'DailyController@postDeleteDaily');
+    Route::post('dailies/sort', 'DailyController@postSortDaily');
 });
 
 // RAIDS

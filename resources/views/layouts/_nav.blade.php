@@ -141,6 +141,10 @@
                         <a class="dropdown-item" href="{{ url(__('raids.raids')) }}">
                             {{ ucfirst(__('raids.raids')) }}
                         </a>
+
+                        <a class="dropdown-item" href="{{ url(__('dailies.dailies')) }}">
+                            {{ __('dailies.dailies') }}
+                        </a>
                     </div>
                 </li>
                 <li class="nav-item">
