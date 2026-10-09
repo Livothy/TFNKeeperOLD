@@ -130,7 +130,7 @@ class GeneratorController extends Controller {
      */
     public function postDeleteRandomGenerator(Request $request, GeneratorService $service, $id) {
         if ($id && $service->deleteRandomGenerator(RandomGenerator::find($id), Auth::user())) {
-            flash('Category deleted successfully.')->success();
+            flash('Generator deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
