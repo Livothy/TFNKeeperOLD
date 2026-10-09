@@ -160,4 +160,10 @@ class Notification extends Model {
 
     public const RAID_PARTICIPANT_REWARDS = 4200;
     public const RAID_PARTICIPANT_REWARDLESS = 4201;
+    public const AWARD_GRANT = 341;
+    public const AWARD_REMOVAL = 342;
+    public const AWARD_TRANSFER = 343;
+    public const FORCED_AWARD_TRANSFER = 344;
+    public const CHARACTER_AWARD_GRANT = 345;
+    public const CHARACTER_AWARD_REMOVAL = 346;
 }

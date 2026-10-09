@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Data;
 
 use App\Http\Controllers\Controller;
+use App\Models\Award\Award;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
@@ -47,6 +48,7 @@ class LootTableController extends Controller {
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
             'tables'     => LootTable::orderBy('name')->pluck('name', 'id'),
             'rarities'   => array_filter($rarities),
+            'awards'     => Award::orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -73,6 +75,7 @@ class LootTableController extends Controller {
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
             'tables'     => LootTable::orderBy('name')->pluck('name', 'id'),
             'rarities'   => array_filter($rarities),
+            'awards'     => Award::orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
