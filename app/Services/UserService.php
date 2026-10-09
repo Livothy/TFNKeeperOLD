@@ -789,4 +789,19 @@ class UserService extends Service {
 
         return $this->rollbackReturn(false);
     }
+
+    /**
+     * Change character like settings.
+     *
+     * @param mixed $data
+     * @param User  $user
+     *
+     * @return bool
+     */
+    public function updateAllowCharacterLikes($data, $user) {
+        $user->settings->allow_character_likes = $data;
+        $user->settings->save();
+
+        return true;
+    }
 }

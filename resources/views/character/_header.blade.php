@@ -43,6 +43,19 @@
             @endif
         </div>
     @endif
+    @if (!$character->is_myo_slot)
+        @if ($character->user && $character->user->settings->allow_character_likes)
+            <div class="btn btn-primary float-right ml-2" data-toggle="tooltip" title="{{ ucfirst(__('character_likes.liked')) }}
+            {{ $character->likeTotal }} times">
+                <i class="fas fa-star"></i> {{ $character->likeTotal }}</a>
+            </div>
+        @endif
+        @if (Auth::check() && $character->user && $character->user->settings->allow_character_likes && Auth::user()->canLike($character) && Auth::user()->id != $character->user_id)
+            {!! Form::open(['url' => $character->url . '/like', 'class' => 'float-right m-0 ml-2 d-inline-flex p-0']) !!}
+            {!! Form::button('<i class="fas fa-star"></i> ' . ucfirst(__('character_likes.like')), ['type' => 'submit', 'class' => 'btn btn-outline-success m-0']) !!}
+            {!! Form::close() !!}
+        @endif
+    @endif
     @if ($character->is_visible && Auth::check() && $character->user_id != Auth::user()->id)
         <?php $bookmark = Auth::user()->hasBookmarked($character); ?>
         <a href="#" class="btn btn-outline-info float-right bookmark-button ml-2" data-id="{{ $bookmark ? $bookmark->id : 0 }}" data-character-id="{{ $character->id }}"><i class="fas fa-bookmark"></i>

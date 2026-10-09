@@ -45,6 +45,8 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function () {
     Route::post('user-pages/edit/{id?}', 'AccountController@postCreateEditUserPage');
     Route::post('user-pages/delete/{id}', 'AccountController@postDeleteUserPage');
 
+    Route::post('character-likes', 'AccountController@postAllowCharacterLikes');
+
     Route::get('two-factor/confirm', 'AccountController@getConfirmTwoFactor');
     Route::post('two-factor/enable', 'AccountController@postEnableTwoFactor');
     Route::post('two-factor/confirm', 'AccountController@postConfirmTwoFactor');
@@ -124,6 +126,8 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
 
     Route::post('{slug}/approval', 'CharacterController@postCharacterApproval');
     Route::get('{slug}/approval', 'CharacterController@getCharacterApproval');
+
+    Route::post('{slug}/like', 'CharacterController@postLikeCharacter');
 });
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');

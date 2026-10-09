@@ -1908,6 +1908,51 @@ class CharacterManager extends Service {
     }
 
     /**
+     * Like a character.
+     *
+     * @param mixed $character
+     * @param mixed $user
+     */
+    public function likeCharacter($character, $user) {
+        DB::beginTransaction();
+
+        try {
+            // throw in another like check
+            $user->checkLike($character);
+
+            // check all the like criteria
+            if (!$user->canLike($character)) {
+                throw new \Exception('You cannot '.__('character_likes.like').' this character.');
+            }
+
+            // character is owned by you!
+            if ($user->id == $character->user->id) {
+                throw new \Exception('You cannot '.__('character_likes.like').' a character that you own.');
+            }
+
+            // character's owner disabled likes
+            if (!$character->user->settings->allow_character_likes) {
+                throw new \Exception("This character's user is not allowing ".__('character_likes.likes').'.');
+            }
+
+            // increment like count
+            $character->profile->like_count += 1;
+            $character->profile->save();
+
+            // mark the like as liked now
+            $like = $user->characterLikes()->where('character_id', $character->id)->first();
+            $like->liked_at = Carbon::now();
+            $like->save();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Handles character data.
      *
      * @param array $data

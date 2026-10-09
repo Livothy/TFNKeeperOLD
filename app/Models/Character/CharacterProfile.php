@@ -12,6 +12,7 @@ class CharacterProfile extends Model {
      */
     protected $fillable = [
         'character_id', 'text', 'parsed_text', 'link',
+        'like_count',
     ];
 
     /**

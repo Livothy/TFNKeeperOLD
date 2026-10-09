@@ -693,4 +693,71 @@ class BrowseController extends Controller {
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
+
+    /**
+     * Shows the character likes leaderboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getLikesLeaderboard(Request $request) {
+        // this is a mess. please don't look.
+
+        // abort if logged out to reduce strain
+        if (!Auth::check()) {
+            abort(404);
+        }
+
+        // check if enabled, if not, there's no point to fetch anything lol
+        if (!Settings::get('character_likes_leaderboard_enable')) {
+            abort(404);
+        }
+
+        // fetch characters
+        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->myo(0)->where(function ($query) {
+            // only display characters whose users allow likes
+            $query = $query->whereRelation('user.settings', 'allow_character_likes', 1);
+        });
+
+        $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
+
+        $query->whereIn('id', $imageQuery->pluck('character_id')->toArray());
+
+        $randomcharacter = $query->visible()->get()->random(1)->first() ?? null;
+
+        if ($request->get('name')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('characters.name', 'LIKE', '%'.$request->get('name').'%')->orWhere('characters.slug', 'LIKE', '%'.$request->get('name').'%');
+            });
+        }
+
+        if ($request->get('owner')) {
+            $owner = User::find($request->get('owner'));
+            $query->where(function ($query) use ($owner) {
+                $query->where('user_id', $owner->id);
+            });
+        }
+
+        if (!Auth::check() || !Auth::user()->hasPower('manage_characters')) {
+            $query->visible();
+        }
+
+        switch ($request->get('sort')) {
+            case 'desc':
+                $sort = 'sortByDesc';
+                break;
+            case 'asc':
+                $sort = 'sortBy';
+                break;
+            default:
+                $sort = 'sortByDesc';
+        }
+
+        return view('browse.character_likes_leaderboard', [
+            'isMyo'           => false,
+            'characters'      => $query->get()->$sort('likeTotal')->paginate(24)->appends($request->query()),
+            'sublists'        => Sublist::orderBy('sort', 'DESC')->get(),
+            'userOptions'     => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'randomcharacter' => $randomcharacter,
+        ]);
+    }
 }

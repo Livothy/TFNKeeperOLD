@@ -209,6 +209,25 @@
             {!! Form::close() !!}
         @endif
     </div>
+
+    <h3>Character {{ ucfirst(__('character_likes.likes')) }} Setting</h3>
+    {!! Form::open(['url' => 'account/character-likes']) !!}
+    <div class="form-group row">
+        <label class="col-md-2 col-form-label">Setting</label>
+        <div class="col-md-10">
+            {!! Form::select(
+                'allow_character_likes',
+                ['0' => 'Do not allow other users to ' . __('character_likes.like') . ' your characters.', '1' => 'Other users can ' . __('character_likes.like') . ' your characters.'],
+                Auth::user()->settings->allow_character_likes,
+                ['class' => 'form-control'],
+            ) !!}
+        </div>
+    </div>
+    <div class="text-right">
+        {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+    </div>
+    {!! Form::close() !!}
+    </div>
 @endsection
 
 @section('scripts')
