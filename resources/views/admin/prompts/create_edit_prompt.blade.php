@@ -34,10 +34,7 @@
 
     <div class="form-group">
         {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
-        <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
-        </div>
+        <div>{!! Form::file('image') !!}</div>
         <div class="text-muted">Recommended size: 100px x 100px</div>
         @if ($prompt->has_image)
             <div class="form-check">
@@ -104,10 +101,21 @@
         </div>
     </div>
 
-    <div class="form-group">
-        {!! Form::label('Hide Submissions (Optional)') !!} {!! add_help('Hide submissions to this prompt until the prompt ends, or forever. <strong>Hiding until the prompt ends requires a set end time.</strong>') !!}
-        {!! Form::select('hide_submissions', [0 => 'Submissions Visible After Approval', 1 => 'Hide Submissions Until Prompt Ends', 2 => 'Hide Submissions Always'], $prompt->hide_submissions, ['class' => 'form-control']) !!}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('Hide Submissions (Optional)') !!} {!! add_help('Hide submissions to this prompt until the prompt ends, or forever. <strong>Hiding until the prompt ends requires a set end time.</strong>') !!}
+                {!! Form::select('hide_submissions', [0 => 'Submissions Visible After Approval', 1 => 'Hide Submissions Until Prompt Ends', 2 => 'Hide Submissions Always'], $prompt->hide_submissions, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::checkbox('public_queue', 1, $prompt->id ? $prompt->public_queue : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('public_queue', 'Queue is Public', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Prompts that are not public will only have their queues visible to admins. If public, then they will appear under the Activity tab.') !!}
+            </div>
+        </div>
     </div>
+
 
     <h3>Rewards</h3>
     <p>Rewards are credited on a per-user basis. Mods are able to modify the specific rewards granted at approval time.</p>

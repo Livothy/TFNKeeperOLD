@@ -19,6 +19,11 @@
             @if ($prompt->end_at)
                 <div><strong>Ends: </strong>{!! format_date($prompt->end_at) !!} ({{ $prompt->end_at->diffForHumans() }})</div>
             @endif
+            @if ($prompt->public_queue)
+                <div><strong>Queue Visibility: </strong>Public</div>
+            @else
+                <div><strong>Queue Visibility: </strong>Private</div>
+            @endif
         </div>
         <div class="world-entry-text">
             <p>{{ $prompt->summary }}</p>

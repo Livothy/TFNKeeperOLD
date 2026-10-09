@@ -89,6 +89,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('ajax_search_custom_tables', '', 'Auto-generated', false);
 
+        $this->addSiteSetting('is_design_queue_public', 1, '0: Design queue is hidden, 1: Design queue is public.');
+
         $this->line("\nSite settings up to date!");
     }
 

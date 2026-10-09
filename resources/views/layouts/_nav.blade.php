@@ -57,6 +57,9 @@
                             <a class="dropdown-item" href="{{ url('submissions') }}">
                                 Prompt Submissions
                             </a>
+                            <a class="dropdown-item" href="{{ url('queues') }}">
+                                Queues
+                            </a>
                             <a class="dropdown-item" href="{{ url('claims') }}">
                                 Claims
                             </a>
