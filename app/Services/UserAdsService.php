@@ -55,7 +55,8 @@ class UserAdsService extends Service {
 
         try {
             $data['text'] = parse($data['text']);
-            $data['user_id'] = $user->id;
+            // Keep the original poster; staff editing an ad must not take it over
+            unset($data['user_id']);
 
             $user_ads->update($data);
 
