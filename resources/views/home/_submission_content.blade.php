@@ -54,7 +54,7 @@
 <div class="card mb-3">
     <div class="card-header h2">Comments</div>
     <div class="card-body">
-        {!! nl2br(htmlentities($submission->comments)) !!}
+        {!! $submission->comments !!}
     </div>
 
     @if (Auth::check() && $submission->staff_comments && ($submission->user_id == Auth::user()->id || Auth::user()->hasPower('manage_submissions')))

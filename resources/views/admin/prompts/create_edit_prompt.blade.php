@@ -59,6 +59,11 @@
         {!! Form::textarea('description', $prompt->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
+    <div class="form-group">
+        {!! Form::label('User form (Optional)') !!} {!! add_help('This is the template that will be shown in the comment section when a user select this prompt in submission.') !!}
+        {!! Form::textarea('form', $prompt->form, ['class' => 'form-control wysiwyg']) !!}
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">

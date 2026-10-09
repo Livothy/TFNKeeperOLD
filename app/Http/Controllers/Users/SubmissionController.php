@@ -174,6 +174,24 @@ class SubmissionController extends Controller {
     }
 
     /**
+     * Shows prompt form.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPromptForm($id) {
+        $prompt = Prompt::active()->where('id', $id)->first();
+        if (!$prompt) {
+            return response(404);
+        }
+
+        return view('home._promptform', [
+            'form' => $prompt->form,
+        ]);
+    }
+
+    /**
      * Creates a new submission.
      *
      * @param App\Services\SubmissionManager $service
