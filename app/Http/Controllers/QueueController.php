@@ -16,6 +16,10 @@ class QueueController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getQueueIndex(Request $request, $status = null) {
+        // Only public statuses; drafts are private work in progress
+        if ($status && !in_array(ucfirst($status), ['Pending', 'Approved', 'Rejected'])) {
+            abort(404);
+        }
         $submissions = Submission::with('prompt')->where('status', $status ? ucfirst($status) : 'Pending')->whereNotNull('prompt_id');
         $designs = CharacterDesignUpdate::where('status', $status ? ucfirst($status) : 'Pending');
         $data = $request->only(['prompt_category_id', 'sort']);
