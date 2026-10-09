@@ -465,7 +465,7 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @return url
      */
     public function getProfileImgUrlAttribute() {
-        if ($this->profile_img == 'default.png') {
+        if ($this->profile_img == 'default.png' || !file_exists(public_path('images/profileimgs/'.$this->profile_img))) {
             return url('images/profileimgs/default.png');
         }
 
