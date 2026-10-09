@@ -13,7 +13,7 @@ class SitePage extends Model {
      * @var array
      */
     protected $fillable = [
-        'key', 'title', 'text', 'parsed_text', 'is_visible', 'can_comment', 'allow_dislikes',
+        'key', 'title', 'text', 'parsed_text', 'is_visible', 'admin_only', 'can_comment', 'allow_dislikes',
     ];
 
     /**

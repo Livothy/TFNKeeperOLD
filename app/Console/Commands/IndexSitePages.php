@@ -179,7 +179,7 @@ class IndexSitePages extends Command {
                     break;
                 case 'site_pages':
 
-                    $pages = SitePage::where('is_visible', 1)->get();
+                    $pages = SitePage::where('is_visible', 1)->where('admin_only', 0)->get();
                     $bar = $this->output->createProgressBar(count($pages));
                     $bar->start();
                     foreach ($pages as $page) {

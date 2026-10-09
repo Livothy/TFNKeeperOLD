@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SitePage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller {
@@ -24,7 +25,8 @@ class PageController extends Controller {
      */
     public function getPage($key) {
         $page = SitePage::where('key', $key)->where('is_visible', 1)->first();
-        if (!$page) {
+        // Staff-only pages 404 for everyone else, so their existence isn't revealed
+        if (!$page || ($page->admin_only && !(Auth::check() && Auth::user()->isStaff))) {
             abort(404);
         }
 
