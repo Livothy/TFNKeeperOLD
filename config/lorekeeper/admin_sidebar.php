@@ -232,6 +232,10 @@ return [
                 'name' => 'File Manager',
                 'url'  => 'admin/files',
             ],
+            [
+                'name' => 'Ajax Search Settings',
+                'url'  => 'admin/ajax-search',
+            ],
         ],
     ],
 ];

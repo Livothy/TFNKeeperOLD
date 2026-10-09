@@ -182,3 +182,8 @@ Route::group(['prefix' => 'design-hub'], function () {
     Route::get('base-coats/', 'BaseController@getBasePage');
     Route::get('trait/{slug}', 'FeatureController@getTraitPage');
 });
+
+/**************************************************************************************************
+    Search Function
+**************************************************************************************************/
+Route::get('asearch', 'SearchController@siteSearch');

@@ -85,6 +85,10 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('designhub_trait_categories', 0, 'Enter in all of the trait categories you want to display on the design hub page. Seperate by comma. EX: "1,2,3"');
 
+        $this->addSiteSetting('ajax_search_core_tables', '', 'Auto-generated', false);
+
+        $this->addSiteSetting('ajax_search_custom_tables', '', 'Auto-generated', false);
+
         $this->line("\nSite settings up to date!");
     }
 
@@ -97,14 +101,16 @@ class AddSiteSettings extends Command {
      * @param string $key
      * @param int    $value
      * @param string $description
+     * @param mixed  $show_in_settings
      */
-    private function addSiteSetting($key, $value, $description) {
+    private function addSiteSetting($key, $value, $description, $show_in_settings = true) {
         if (!DB::table('site_settings')->where('key', $key)->exists()) {
             DB::table('site_settings')->insert([
                 [
-                    'key'         => $key,
-                    'value'       => $value,
-                    'description' => $description,
+                    'key'               => $key,
+                    'value'             => $value,
+                    'description'       => $description,
+                    'show_in_settings'  => $show_in_settings,
                 ],
             ]);
             $this->info('Added:   '.$key.' / Default: '.$value);
