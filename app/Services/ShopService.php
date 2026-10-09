@@ -221,6 +221,9 @@ class ShopService extends Service {
             $data['parsed_description'] = null;
         }
         $data['is_active'] = isset($data['is_active']);
+        if (!isset($data['quotes'])) {
+            $data['quotes'] = null;
+        }
 
         if (isset($data['remove_image'])) {
             if ($shop && $shop->has_image && $data['remove_image']) {
