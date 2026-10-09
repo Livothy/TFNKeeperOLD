@@ -29,6 +29,19 @@
         </div>
         {!! Form::close() !!}
     </div>
+    <div class="card p-3 mb-2">
+        <h3>Profile Header Image</h3>
+        <p>An image shown across the top of your profile.</p>
+        {!! Form::open(['url' => 'account/profile_img', 'files' => true]) !!}
+        <div class="custom-file mb-1">
+            {!! Form::label('profile_img', 'Update Profile Header Image', ['class' => 'custom-file-label']) !!}
+            {!! Form::file('profile_img', ['class' => 'custom-file-input']) !!}
+        </div>
+        <div class="text-right">
+            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+        </div>
+        {!! Form::close() !!}
+    </div>
 
     @if (config('lorekeeper.settings.allow_username_changes'))
         <div class="card p-3 mb-2">

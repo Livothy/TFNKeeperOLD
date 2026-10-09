@@ -2,6 +2,10 @@
     <div style="filter:grayscale(1); opacity:0.75">
 @endif
 
+@if ($user->profile_img && $user->profile_img != 'default.png')
+    <div class="profile-header-image mb-3" style="background-image: url('{{ $user->profileImgUrl }}'); background-size: cover; background-position: center; min-height: 180px;"></div>
+@endif
+
 <div class="row mb-3">
     <div class="col-md-2 text-center">
         <!-- User Icon -->
