@@ -715,6 +715,9 @@ class UserService extends Service {
         DB::beginTransaction();
 
         try {
+            if (($page->user_id != $user->id) && !$user->isStaff) {
+                throw new \Exception('You cannot edit pages that are not your own.');
+            }
             if (trim($data['key']) == '' || str_replace(' ', '-', trim($data['key'])) == '') {
                 throw new \Exception('Key cannot be an empty string.');
             }

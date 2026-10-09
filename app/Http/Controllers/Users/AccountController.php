@@ -335,7 +335,7 @@ class AccountController extends Controller {
      */
     public function getEditUserPage($id) {
         $userPage = UserPage::find($id);
-        if (!$userPage) {
+        if (!$userPage || ($userPage->user_id != Auth::user()->id && !Auth::user()->isStaff)) {
             abort(404);
         }
 
@@ -380,7 +380,7 @@ class AccountController extends Controller {
      */
     public function getDeleteUserPage($id) {
         $userPage = UserPage::find($id);
-        if (!$userPage) {
+        if (!$userPage || ($userPage->user_id != Auth::user()->id && !Auth::user()->isStaff)) {
             abort(404);
         }
 
