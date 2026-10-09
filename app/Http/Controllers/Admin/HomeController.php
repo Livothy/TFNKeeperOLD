@@ -8,6 +8,7 @@ use App\Models\AdminLog;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Currency\Currency;
+use App\Models\Gallery\GalleryCriterion;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Raid\Raid;
 use App\Models\Report\Report;
@@ -44,7 +45,7 @@ class HomeController extends Controller {
             'transferCount'          => $openTransfersQueue ? CharacterTransfer::active()->where('is_approved', 0)->count() : 0,
             'tradeCount'             => $openTransfersQueue ? Trade::where('status', 'Pending')->count() : 0,
             'galleryRequireApproval' => $galleryRequireApproval,
-            'galleryCurrencyAwards'  => $galleryCurrencyAwards,
+            'galleryCurrencyAwards'  => GalleryCriterion::get()->count() > 0,
             'gallerySubmissionCount' => GallerySubmission::collaboratorApproved()->where('status', 'Pending')->count(),
             'galleryAwardCount'      => GallerySubmission::requiresAward()->where('is_valued', 0)->count(),
             'activeRaid'             => $activeRaid,

@@ -115,6 +115,13 @@ class Gallery extends Model {
         return GallerySubmission::whereIn('gallery_id', $this->children->pluck('id'))->visible()->orderBy('created_at', 'DESC');
     }
 
+    /**
+     * Get the criteria attached to this gallery.
+     */
+    public function criteria() {
+        return $this->hasMany('App\Models\Gallery\GalleryCriterion', 'gallery_id');
+    }
+
     /**********************************************************************************************
 
         SCOPES

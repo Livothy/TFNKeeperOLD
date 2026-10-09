@@ -223,6 +223,10 @@ return [
                 'name' => 'Random Generators',
                 'url'  => 'admin/data/random',
             ],
+            [
+                'name' => 'Criteria Rewards',
+                'url'  => 'admin/data/criteria',
+            ],
         ],
     ],
     'Raids'       => [

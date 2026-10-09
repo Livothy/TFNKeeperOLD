@@ -26,7 +26,6 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function () {
     Route::post('password', 'AccountController@postPassword');
     Route::post('email', 'AccountController@postEmail');
     Route::post('avatar', 'AccountController@postAvatar');
-    Route::post('profile_img', 'AccountController@postProfileImg');
     Route::post('username', 'AccountController@postUsername');
     Route::get('aliases', 'AccountController@getAliases');
     Route::get('make-primary/{id}', 'AccountController@getMakePrimary');
@@ -155,6 +154,7 @@ Route::group(['prefix' => 'gallery'], function () {
     Route::get('submit/character/{slug}', 'GalleryController@getCharacterInfo');
     Route::get('edit/{id}', 'GalleryController@getEditGallerySubmission');
     Route::get('queue/{id}', 'GalleryController@getSubmissionLog');
+    Route::post('queue/totals/{id}', 'GalleryController@postSubmissionTotals');
     Route::post('submit', 'GalleryController@postCreateEditGallerySubmission');
     Route::post('edit/{id}', 'GalleryController@postCreateEditGallerySubmission');
 
@@ -272,4 +272,16 @@ Route::group(['prefix' => 'user_ads'], function () {
 Route::group(['prefix' => __('raids.raids')], function () {
     Route::post('attack/{id}/'.__('raids.boss').'/{bossId}', 'RaidController@postAttackRaid');
     Route::get('leaderboard/{id}', 'RaidController@getUserLeaderboard');
+});
+
+/**************************************************************************************************
+    Criteria
+**************************************************************************************************/
+Route::group(['prefix' => 'criteria'], function () {
+    Route::get('/{entity}/{id}', 'CriterionController@getCriterionSelector')->where('entity', 'prompt|gallery');
+    Route::get('{entity}/{id}/{entity_id}/{form_id}', 'CriterionController@getCriterionForm')->where('entity', 'prompt|gallery');
+    Route::get('/{id}', 'CriterionController@getCriterionFormLimited');
+    Route::post('/rewards/{id}', 'CriterionController@postCriterionRewards');
+
+    Route::get('guide/{id}', 'CriterionController@getCriterionGuide');
 });
