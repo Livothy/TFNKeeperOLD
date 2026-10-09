@@ -3,3 +3,17 @@
 /character-updates/
 /avatars/
 /gallery/
+# Site Images (Admin > Site Images) stay local to each install, so a deploy
+# never overwrites what staff uploaded and test images never get committed.
+# Defaults live in data/images; a fresh install runs `php artisan copy-default-images`.
+/header.png
+/characters.png
+/account.png
+/inventory.png
+/currency.png
+/myo.png
+/myo-th.png
+/meta-image.png
+/watermark.png
+/content_warning.png
+/logo.png
