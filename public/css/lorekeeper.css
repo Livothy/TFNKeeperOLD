@@ -109,6 +109,7 @@ main > .row {
     /*background-color: #eee;*/
     background-repeat: repeat;
     min-height: 200px;
+    text-align: center;
 }
 
 .navbar .navbar-brand, .navbar .nav-item {
@@ -213,6 +214,11 @@ main > .row {
     .site-header-image {
         display: none;
     }
+
+    .site-header-image #logo {
+        display: none;
+    }
+
     .site-mobile-header {
         display: block;
         position: fixed;
@@ -979,4 +985,12 @@ tr.accountbound {
     position: absolute;
     right: 0.75rem;
     bottom: -1rem;
+}
+
+/* Logo *************************************************************************************/
+
+#logo {
+    max-height: 200px;
+    margin: 1%;
+    max-width: 90%;
 }
