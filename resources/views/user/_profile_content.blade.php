@@ -16,7 +16,7 @@
         <!-- Username & optional FTO Badge -->
         <div class="row no-gutters">
             <div class="col h2 text-center text-md-left">
-                {!! $user->displayName !!}
+                {!! $user->isOnline() !!}{!! $user->displayName !!}
                 @if ($user->previousUsername && mb_strtolower($user->name) != mb_strtolower($user->previousUsername))
                     <small>{!! add_help('Previously known as ' . $user->previousUsername) !!}</small>
                 @endif

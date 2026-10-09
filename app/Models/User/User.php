@@ -24,6 +24,7 @@ use App\Models\WorldExpansion\FactionRankMember;
 use App\Models\WorldExpansion\Location;
 use App\Traits\Commenter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -40,7 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     protected $fillable = [
         'name', 'alias', 'rank_id', 'email', 'email_verified_at', 'password', 'is_news_unread', 'is_banned', 'has_alias', 'avatar', 'is_sales_unread', 'birthday',
-        'is_deactivated', 'deactivater_id',
+        'is_deactivated', 'deactivater_id', 'last_seen',
         'home_id', 'home_changed', 'faction_id', 'faction_changed',
     ];
 
@@ -497,6 +498,20 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     public function getLogTypeAttribute() {
         return 'User';
+    }
+
+    // Check if user is online and display When they were online
+    public function isOnline()
+    {
+
+      $onlineStatus = Cache::has('user-is-online-' . $this->id);
+      $online = Carbon::createFromTimeStamp(strtotime(Cache::get('user-is-online-time-' . $this->id)));
+      $onlineTime = isset($this->last_seen) ? Carbon::parse($this->last_seen)->diffForHumans() : 'a long time ago';
+
+      if($onlineStatus) $result = '<i class="fas fa-circle text-success mr-2" data-toggle="tooltip" title="This user is online."></i>';
+      else  $result = '<i class="far fa-circle text-secondary mr-2" data-toggle="tooltip" title="This user was last online ' . $onlineTime .'."></i>';
+
+      return $result;
     }
 
     /**

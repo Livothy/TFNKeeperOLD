@@ -68,7 +68,7 @@
                 <div class="logs-table-row">
                     <div class="row flex-wrap">
                         <div class="col-12 col-md-4">
-                            <div class="logs-table-cell">{!! $user->displayName !!}</div>
+                            <div class="logs-table-cell">{!! $user->isOnline() !!}{!! $user->displayName !!}</div>
                         </div>
                         <div class="col-4 col-md-3">
                             <div class="logs-table-cell">{!! $user->displayAlias !!}</div>
