@@ -41,6 +41,10 @@ class CriterionController extends Controller {
     public function postCreateEditCriterion(Request $request, CriterionService $service, $id = null) {
         $id ? $request->validate(Criterion::$updateRules) : $request->validate(Criterion::$createRules);
         $data = $request->only(['name', 'currency_id', 'is_active', 'summary', 'is_guide_active', 'base_value', 'sort', 'rounding', 'round_precision']);
+        // Precision only matters when rounding; a blank field would violate the NOT NULL column
+        if (!isset($data['round_precision']) || $data['round_precision'] === '') {
+            $data['round_precision'] = 0;
+        }
 
         if ($id && $service->updateCriterion(Criterion::find($id), $data)) {
             flash('Criterion updated successfully.')->success();
