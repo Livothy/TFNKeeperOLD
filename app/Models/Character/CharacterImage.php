@@ -8,6 +8,8 @@ use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use Settings;
 
 class CharacterImage extends Model {
     use SoftDeletes;
@@ -22,7 +24,7 @@ class CharacterImage extends Model {
         'extension', 'use_cropper', 'hash', 'fullsize_hash', 'fullsize_extension', 'sort',
         'x0', 'x1', 'y0', 'y1',
         'description', 'parsed_description',
-        'is_valid',
+        'is_valid', 'longest_side',
     ];
 
     /**
@@ -265,5 +267,49 @@ class CharacterImage extends Model {
      */
     public function getThumbnailUrlAttribute() {
         return asset($this->imageDirectory.'/'.$this->thumbnailFileName);
+    }
+
+    /**
+     * Gets the longest side of the image (width, height or square).
+     * Measured once from the image file and stored, so older images are filled in on first view.
+     *
+     * @param mixed $value
+     *
+     * @return string|null
+     */
+    public function getLongestSideAttribute($value) {
+        if (isset($value) || !$this->id) {
+            return $value;
+        }
+
+        $file = $this->imagePath.'/'.$this->imageFileName;
+        $size = file_exists($file) ? @getimagesize($file) : false;
+        if (!$size) {
+            return null;
+        }
+
+        [$width, $height] = $size;
+        $value = $width > $height ? 'width' : ($height > $width ? 'height' : 'square');
+
+        // Store without touching updated_at
+        DB::table($this->table)->where('id', $this->id)->update(['longest_side' => $value]);
+        $this->attributes['longest_side'] = $value;
+
+        return $value;
+    }
+
+    /**
+     * Checks whether the image should use the wide (full width) character page layout.
+     * Square images follow the default_side site setting.
+     *
+     * @return bool
+     */
+    public function getIsWideAttribute() {
+        $side = $this->longestSide;
+        if ($side == 'square') {
+            return Settings::get('default_side') == 1;
+        }
+
+        return $side == 'width';
     }
 }

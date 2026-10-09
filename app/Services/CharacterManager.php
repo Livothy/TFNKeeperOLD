@@ -831,6 +831,9 @@ class CharacterManager extends Service {
                 throw new \Exception('Failed to log admin action.');
             }
 
+            // Clear the longest side measurement, since the new image may have a different shape
+            $image->longest_side = null;
+
             if (config('lorekeeper.settings.masterlist_image_format') != null) {
                 // Remove old versions so that images in various filetypes don't pile up
                 if (file_exists($image->imagePath.'/'.$image->imageFileName)) {

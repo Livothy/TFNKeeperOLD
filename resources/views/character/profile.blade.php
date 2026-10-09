@@ -23,7 +23,7 @@
 
     {{-- Main Image --}}
     <div class="row mb-3">
-        <div class="col-md-7">
+        <div class="col-md-{{ $character->image->isWide ? 12 : 7 }}">
             @if (isset($foreground) && is_array($foreground) && Config::get('lorekeeper.extensions.character_foregrounds.enabled'))
                 <div class="text-center" style="position: relative; display: inline-block;">
                     <!-- Foreground Overlays -->

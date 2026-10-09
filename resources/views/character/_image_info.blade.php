@@ -1,5 +1,5 @@
 {{-- Image Data --}}
-<div class="col-md-5 d-flex">
+<div class="col-md-{{ $image->isWide ? 12 : 5 }} d-flex">
     <div class="card character-bio w-100">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">

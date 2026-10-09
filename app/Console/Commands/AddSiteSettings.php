@@ -75,6 +75,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('group_currency', 1, 'ID of the group currency to award from gallery submissions (if enabled).');
 
+        $this->addSiteSetting('default_side', 0, 'How square character images are laid out on character pages. 0 = square (default layout), 1 = as wide, 2 = as tall.');
+
         $this->addSiteSetting('is_maintenance_mode', 0, '0: Site is normal, 1: Users without the Has Maintenance Access power will be redirected to the home page.');
 
         $this->addSiteSetting('deactivated_privacy', 0, 'Who can view the deactivated list? 0: Admin only, 1: Staff only, 2: Members only, 3: Public.');
