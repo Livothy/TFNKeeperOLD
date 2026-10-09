@@ -46,7 +46,7 @@ class WatchController extends Controller {
     public function postWatch(Request $request, $id) {
         $userToWatch = User::find($id);
 
-        if (!$userToWatch) {
+        if (!$userToWatch || $userToWatch->id == auth()->user()->id) {
             abort(404);
         }
 
