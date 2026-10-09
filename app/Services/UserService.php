@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Facades\Notifications;
 use App\Facades\Settings;
+use Auth;
+use App\Models\User\StaffProfile;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Gallery\GallerySubmission;
@@ -422,6 +424,78 @@ class UserService extends Service {
         return $this->rollbackReturn(false);
     }
 
+
+    /**
+     * Updates or creates a user's staff profile.
+     *
+     * @param array $data
+     * @param User  $user
+     *
+     * @return bool|StaffProfile
+     */
+    public function updateStaffProfile($data, $user) {
+        DB::beginTransaction();
+
+        try {
+            if (!$user->isStaff) {
+                throw new \Exception('You must be a current staff member to update a staff profile.');
+            }
+
+            // Look the profile up by its owner (the branch used find($user->id), i.e. the profile's own id)
+            $staffProfile = StaffProfile::firstOrNew(['user_id' => $user->id]);
+            $staffProfile->text = $data['text'] ?? null;
+            $staffProfile->save();
+
+            return $this->commitReturn($staffProfile);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates or creates a user's staff contact links.
+     *
+     * @param array $data
+     * @param User  $user
+     *
+     * @return bool|StaffProfile
+     */
+    public function updateStaffLinks($data, $user) {
+        DB::beginTransaction();
+
+        try {
+            if (!$user->isStaff) {
+                throw new \Exception('You must be a current staff member to update your staff links.');
+            }
+
+            $sites = [];
+            $urls = [];
+            foreach ($data['url'] ?? [] as $key => $url) {
+                $url = trim((string) $url);
+                if ($url === '') {
+                    continue;
+                }
+                // Only real web links: blocks javascript:, data: and similar URLs in the public team page
+                if (!filter_var($url, FILTER_VALIDATE_URL) || !preg_match('#^https?://#i', $url)) {
+                    throw new \Exception('Links must be full web addresses starting with http:// or https://.');
+                }
+                $sites[] = trim((string) ($data['site'][$key] ?? ''));
+                $urls[] = $url;
+            }
+
+            $staffProfile = StaffProfile::firstOrNew(['user_id' => $user->id]);
+            $staffProfile->contacts = count($urls) ? json_encode(['site' => $sites, 'url' => $urls]) : null;
+            $staffProfile->save();
+
+            return $this->commitReturn($staffProfile);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
     /**
      * Updates a user's username.
      *

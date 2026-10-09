@@ -69,6 +69,11 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/submissions', 'UserController@getUserSubmissions');
 });
 
+# STAFF TEAM
+Route::group(['prefix' => 'team'], function () {
+    Route::get('/', 'BrowseController@getTeamIndex');
+});
+
 /**************************************************************************************************
     Characters
 **************************************************************************************************/
