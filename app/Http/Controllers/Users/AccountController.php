@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\User\User;
 use App\Models\User\UserAlias;
+use App\Models\User\UserPage;
 use App\Services\LinkService;
 use App\Services\UserService;
 use BaconQrCode\Renderer\Color\Rgb;
@@ -303,6 +304,114 @@ class AccountController extends Controller {
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Shows the user pages page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserPages() {
+        return view('account.user_pages');
+    }
+
+    /**
+     * Shows the create user page page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateUserPage() {
+        return view('account.create_edit_user_page', [
+            'userPage' => new UserPage,
+        ]);
+    }
+
+    /**
+     * Shows the edit user page page.
+     *
+     * @param mixed $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getEditUserPage($id) {
+        $userPage = UserPage::find($id);
+        if (!$userPage) {
+            abort(404);
+        }
+
+        return view('account.create_edit_user_page', [
+            'userPage' => $userPage,
+        ]);
+    }
+
+    /**
+     * Creates or edits a user page.
+     *
+     * @param App\Services\UserService $service
+     * @param int                      $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreateEditUserPage(Request $request, UserService $service, $id = null) {
+        $id ? $request->validate(UserPage::$updateRules) : $request->validate(UserPage::$createRules);
+        $data = $request->only(['title', 'key', 'text', 'is_visible', 'show_on_profile', 'can_comment', 'logged_in_only']);
+
+        if ($id && $service->updateUserPage(UserPage::find($id), $data, Auth::user())) {
+            flash('User page updated successfully.')->success();
+        } elseif (!$id && $userPage = $service->createUserPage($data, Auth::user(), Auth::user()->isStaff)) {
+            flash('User page created successfully.')->success();
+
+            return redirect()->to('account/user-pages/edit/'.$userPage->id);
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Gets the user page deletion modal.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getDeleteUserPage($id) {
+        $userPage = UserPage::find($id);
+        if (!$userPage) {
+            abort(404);
+        }
+
+        return view('account._delete_user_page', [
+            'userPage' => $userPage,
+        ]);
+    }
+
+    /**
+     * Deletes a user page.
+     *
+     * @param App\Services\UserService $service
+     * @param int                      $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDeleteUserPage(Request $request, UserService $service, $id) {
+        $userPage = UserPage::find($id);
+        if (!$userPage) {
+            abort(404);
+        }
+
+        if ($id && $service->deleteUserPage($userPage, Auth::user(), Auth::user()->isStaff)) {
+            flash('User page deleted successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->to('account/user-pages');
     }
 
     /**

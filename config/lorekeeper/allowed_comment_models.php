@@ -3,6 +3,7 @@
 return [
 
     // list of models that can have comments
+    'App\Models\User\UserPage',
     'App\Models\User\UserProfile',
     'App\Models\News',
     'App\Models\Sales\Sales',

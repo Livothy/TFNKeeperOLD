@@ -12,6 +12,7 @@ use App\Models\Rank\Rank;
 use App\Models\Submission\Submission;
 use App\Models\Trade;
 use App\Models\User\User;
+use App\Models\User\UserPage;
 use App\Models\User\UserUpdateLog;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -635,6 +636,148 @@ class UserService extends Service {
                 'staff_url'  => $staff->url,
                 'staff_name' => $staff->name,
             ]);
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Creates a user page.
+     *
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     * @param mixed                 $isStaff
+     *
+     * @return \App\Models\UserPage|bool
+     */
+    public function createUserPage($data, $user, $isStaff) {
+        DB::beginTransaction();
+
+        try {
+            $data['user_id'] = $user->id;
+            if (!$isStaff && ($user->pages->count() >= config('lorekeeper.user_pages.user_page_limit'))) {
+                throw new \Exception('You have already created the maximum amount of user pages.');
+            } elseif ($isStaff && $user->pages->count() >= config('lorekeeper.user_pages.staff_page_limit')) {
+                throw new \Exception('You have already created the maximum amount of user pages.');
+            }
+            if (trim($data['key']) == '' || str_replace(' ', '-', trim($data['key'])) == '') {
+                throw new \Exception('Key cannot be an empty string.');
+            }
+            $data['key'] = str_replace(' ', '-', trim($data['key']));
+            if (UserPage::where([['key', '=', $data['key']], ['user_id', '=', $user->id]])->exists()) {
+                throw new \Exception('You are already using this key for a user page.');
+            }
+
+            if (isset($data['text']) && $data['text']) {
+                $data['parsed_text'] = parse($data['text']);
+            } else {
+                $data['parsed_text'] = null;
+                $data['text'] = null;
+            }
+
+            if (!isset($data['is_visible'])) {
+                $data['is_visible'] = 0;
+            }
+            if (!isset($data['show_on_profile'])) {
+                $data['show_on_profile'] = 0;
+            }
+            if (!isset($data['can_comment'])) {
+                $data['can_comment'] = 0;
+            }
+            if (!isset($data['logged_in_only'])) {
+                $data['logged_in_only'] = 0;
+            }
+
+            $page = UserPage::create($data);
+
+            return $this->commitReturn($page);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a user page.
+     *
+     * @param array $data
+     * @param User  $user
+     * @param mixed $page
+     *
+     * @return \App\Models\UserPage|bool
+     */
+    public function updateUserPage($page, $data, $user) {
+        DB::beginTransaction();
+
+        try {
+            if (trim($data['key']) == '' || str_replace(' ', '-', trim($data['key'])) == '') {
+                throw new \Exception('Key cannot be an empty string.');
+            }
+            $data['key'] = str_replace(' ', '-', trim($data['key']));
+            if (UserPage::where([['key', '=', $data['key']], ['id', '!=', $page->id], ['user_id', '=', $user->id]])->exists()) {
+                throw new \Exception('You are already using this key for a user page.');
+            }
+
+            if (isset($data['text']) && $data['text']) {
+                $data['parsed_text'] = parse($data['text']);
+            } else {
+                $data['parsed_text'] = null;
+                $data['text'] = null;
+            }
+
+            if (!isset($data['is_visible'])) {
+                $data['is_visible'] = 0;
+            }
+            if (!isset($data['show_on_profile'])) {
+                $data['show_on_profile'] = 0;
+            }
+            if (!isset($data['can_comment'])) {
+                $data['can_comment'] = 0;
+            }
+            if (!isset($data['logged_in_only'])) {
+                $data['logged_in_only'] = 0;
+            }
+
+            $page->update($data);
+
+            return $this->commitReturn($page);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Deletes a user page.
+     *
+     * @param mixed $page
+     * @param mixed $user
+     * @param mixed $isStaff
+     *
+     * @return bool
+     */
+    public function deleteUserPage($page, $user, $isStaff = false) {
+        DB::beginTransaction();
+
+        try {
+            if (!config('lorekeeper.user_pages.allow_deletion.enabled')) {
+                throw new \Exception('User pages cannot be fully deleted.');
+            }
+            if (($page->user_id != $user->id) && !$isStaff) {
+                throw new \Exception('You cannot delete pages that are not your own.');
+            }
+
+            if (!config('lorekeeper.user_pages.allow_deletion.force_delete')) {
+                $page->delete();
+            } else {
+                $page->forceDelete();
+            }
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

@@ -14,6 +14,7 @@ use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
 use App\Models\User\User;
 use App\Models\User\UserCurrency;
+use App\Models\User\UserPage;
 use App\Models\User\UserUpdateLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -356,6 +357,37 @@ class UserController extends Controller {
             'user'       => $this->user,
             'characters' => true,
             'favorites'  => $this->user->characters->count() ? GallerySubmission::whereIn('id', $userFavorites)->whereIn('id', GalleryCharacter::whereIn('character_id', $userCharacters)->pluck('gallery_submission_id')->toArray())->visible(Auth::user() ?? null)->with('collaborators', 'participants')->favoritedCount(Auth::user() ?? null)->withCommentCount()->orderBy('created_at', 'DESC')->paginate(20)->appends($request->query()) : null,
+        ]);
+    }
+
+    /**
+     * Shows a user's created user page.
+     *
+     * @param string $name
+     * @param mixed  $key
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserPage($name, $key) {
+        $user = $this->user;
+        $userPage = UserPage::where([['key', '=', $key], ['user_id', '=', $user->id]])->first();
+        if (!$userPage) {
+            abort(404);
+        }
+        if (!Auth::check() && $userPage->logged_in_only) {
+            flash('You must be logged in to view this user page!')->error();
+
+            return redirect('/login');
+        }
+        if (!$userPage->is_visible) {
+            if (!Auth::check() || (Auth::check() && (Auth::user()->id != $userPage->user_id && !Auth::user()->isStaff))) {
+                abort(404);
+            }
+        }
+
+        return view('user.page', [
+            'user'       => $this->user,
+            'userPage'   => $userPage,
         ]);
     }
 }

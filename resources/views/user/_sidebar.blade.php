@@ -19,6 +19,28 @@
         <div class="sidebar-item"><a href="{{ $user->url . '/inventory' }}" class="{{ set_active('user/' . $user->name . '/inventory*') }}">Inventory</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/bank' }}" class="{{ set_active('user/' . $user->name . '/bank*') }}">Bank</a></div>
     </li>
+    @if (
+        $user->pages->count() &&
+            $user->pages()->where('show_on_profile', 1)->exists())
+        <li class="sidebar-section">
+            @if ($user->pages()->where('show_on_profile', 1)->count() == 1)
+                <div class="sidebar-item">
+                    <a href="{{ $user->pages()->where('show_on_profile', 1)->first()->url }}" class="{{ set_active('user/' .$user->name .'/page/' .$user->pages()->where('show_on_profile', 1)->first()->key .'*') }}">
+                        {!! $user->pages()->where('show_on_profile', 1)->first()->title !!}
+                    </a>
+                </div>
+            @else
+                <div class="sidebar-section-header">User Pages</div>
+                @foreach ($user->pages()->where('show_on_profile', 1)->get() as $userPage)
+                    <div class="sidebar-item">
+                        <a href="{{ $user->url . '/page/' . $userPage->key }}" class="{{ set_active('user/' . $user->name . '/page/' . $userPage->key . '*') }}">
+                            {!! $userPage->title !!}
+                        </a>
+                    </div>
+                @endforeach
+            @endif
+        </li>
+    @endif
     <li class="sidebar-section">
         <div class="sidebar-section-header">History</div>
         <div class="sidebar-item"><a href="{{ $user->url . '/ownership' }}" class="{{ set_active('user/' . $user->name . '/ownership*') }}">Ownership History</a></div>

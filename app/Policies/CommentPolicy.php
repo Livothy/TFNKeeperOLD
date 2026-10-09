@@ -23,6 +23,8 @@ class CommentPolicy {
     public function delete($user, Comment $comment): bool {
         if (Auth::user()->isStaff) {
             return true;
+        } elseif ($comment->commentable_type == 'App\Models\User\UserPage' && $comment->commentable->user->id == $user->id && config('lorekeeper.user_pages.allow_comments.can_delete')) {
+            return true;
         } else {
             return false;
         }

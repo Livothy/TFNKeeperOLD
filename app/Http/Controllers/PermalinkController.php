@@ -82,6 +82,8 @@ class PermalinkController extends Controller {
 
         if ($comment->commentable_type == 'App\Models\User\UserProfile') {
             $comment->location = $comment->commentable->user->url;
+        } elseif ($comment->commentable_type == 'App\Models\User\UserPage') {
+            $comment->location = $comment->commentable->url;
         } else {
             $comment->location = $comment->commentable->url;
         }

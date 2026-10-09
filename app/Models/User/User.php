@@ -119,6 +119,13 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     /**
+     * Get user-editable pages by this user.
+     */
+    public function pages() {
+        return $this->hasMany(UserPage::class, 'user_id');
+    }
+
+    /**
      * Gets the account that deactivated this account.
      */
     public function deactivater() {

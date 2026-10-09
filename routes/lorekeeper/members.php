@@ -37,6 +37,14 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function () {
     Route::post('dob', 'AccountController@postBirthday');
     Route::post('status', 'AccountController@postStatusMessage');
 
+    Route::get('user-pages', 'AccountController@getUserPages');
+    Route::get('user-pages/create', 'AccountController@getCreateUserPage');
+    Route::get('user-pages/edit/{id}', 'AccountController@getEditUserPage');
+    Route::get('user-pages/delete/{id}', 'AccountController@getDeleteUserPage');
+    Route::post('user-pages/create', 'AccountController@postCreateEditUserPage');
+    Route::post('user-pages/edit/{id?}', 'AccountController@postCreateEditUserPage');
+    Route::post('user-pages/delete/{id}', 'AccountController@postDeleteUserPage');
+
     Route::get('two-factor/confirm', 'AccountController@getConfirmTwoFactor');
     Route::post('two-factor/enable', 'AccountController@postEnableTwoFactor');
     Route::post('two-factor/confirm', 'AccountController@postConfirmTwoFactor');
