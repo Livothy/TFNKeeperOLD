@@ -441,6 +441,20 @@ class AwardCaseManager extends Service {
         DB::beginTransaction();
 
         try {
+            // TFN: an award's user/character limit (0 = unlimited) applies however it's received
+            // (grants, prompt/loot rewards), not just transfers. Cap quietly rather than failing,
+            // so an automatic payout isn't rejected because one award in it is already maxed.
+            $limit = $recipient->logType == 'User' ? $award->user_limit : $award->character_limit;
+            if ($limit > 0) {
+                $held = $recipient->logType == 'User'
+                    ? UserAward::where('user_id', $recipient->id)->where('award_id', $award->id)->sum('count')
+                    : CharacterAward::where('character_id', $recipient->id)->where('award_id', $award->id)->sum('count');
+                $quantity = min($quantity, max(0, $limit - $held));
+                if ($quantity <= 0) {
+                    return $this->commitReturn(true);
+                }
+            }
+
             $encoded_data = \json_encode($data);
 
             if ($recipient->logType == 'User') {
