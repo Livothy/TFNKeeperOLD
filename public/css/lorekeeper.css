@@ -936,3 +936,47 @@ tr.accountbound {
 .marking-output a:hover {
 	color: var(--blue);
 }
+
+/* USER STATUS MESSAGE *************************************************************************************/
+.status-message {
+    background: var(--light);
+    border: var(--gray) solid 2px;
+    border-radius: 0.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    position: relative;
+}
+
+.status-message:after {
+    content: '';
+    border-color: var(--light) transparent;
+    border-style: solid;
+    border-width: 0 0.75rem 0.75rem;
+    width: 0;
+
+    position: absolute;
+    top: -0.75rem;
+    left: 5%;
+    z-index: 1;
+}
+
+.status-message:before {
+    content: '';
+    border-color: var(--gray) transparent;
+    border-style: solid;
+    border-width: 0 calc(0.75rem + 4px) calc(0.75rem + 3px);
+    margin-left: -4px;
+    width: 0;
+
+    position: absolute;
+    top: calc(-0.75rem + -3px);
+    left: 5%;
+    z-index: 0;
+}
+
+.status-message .status-set {
+    position: absolute;
+    right: 0.75rem;
+    bottom: -1rem;
+}

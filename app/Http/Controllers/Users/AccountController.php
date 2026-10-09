@@ -14,6 +14,7 @@ use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\Fill;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -181,6 +182,25 @@ class AccountController extends Controller {
                 flash($error)->error();
             }
         }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Changes the user's status message and when it clears.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postStatusMessage(Request $request) {
+        $request->validate([
+            'status_message' => 'nullable|string|max:255',
+        ]);
+        Auth::user()->profile->update([
+            'status_message'        => $request->get('status_message'),
+            'clear_status_on'       => $request->get('clear_status_on'),
+            'status_set_on'         => ($request->get('status_message') !== null ? Carbon::now() : null),
+        ]);
+        flash('Status message updated successfully.')->success();
 
         return redirect()->back();
     }

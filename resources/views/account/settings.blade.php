@@ -63,6 +63,41 @@
     @endif
 
     <div class="card p-3 mb-2">
+        <h3>Status Message</h3>
+        <p>
+            This message will be displayed on your profile if set. Should be kept short at a maximum of about 255 characters, does not support html. You can optionally indicate when you would like your status message to automatically clear. If you would
+            like your status message to stay indefinitely, leave the 'Clear Status On' field blank.
+        </p>
+        <p>
+            @if (isset(Auth::user()->profile->status_set_on))
+                Your status was last edited {!! pretty_date(Auth::user()->profile->status_set_on) !!}.
+            @else
+                You haven't edited your status message yet.
+            @endif
+            @if (isset(Auth::user()->profile->clear_status_on))
+                Your status is set to clear on {!! format_date(Auth::user()->profile->clear_status_on) !!}.
+            @endif
+        </p>
+        {!! Form::open(['url' => 'account/status']) !!}
+        <div class="form-group">
+            {!! Form::label('status_message', 'Status Message') !!}
+            {!! Form::text('status_message', Auth::user()->profile->status_message, ['class' => 'form-control']) !!}
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label">Clear Status On (Optional)</label>
+            <div class="col-md-10">
+                <div class="input-group">
+                    {!! Form::text('clear_status_on', Auth::user()->profile->clear_status_on, ['class' => 'form-control datepicker']) !!}
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+        </div>
+        {!! Form::close() !!}
+    </div>
+
+    <div class="card p-3 mb-2">
         <h3>Profile</h3>
         {!! Form::open(['url' => 'account/profile']) !!}
         <div class="form-group">
@@ -174,4 +209,8 @@
             {!! Form::close() !!}
         @endif
     </div>
+@endsection
+
+@section('scripts')
+    @include('widgets._datetimepicker_js')
 @endsection

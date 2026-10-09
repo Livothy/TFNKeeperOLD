@@ -70,6 +70,15 @@
     </div>
 </div>
 
+@if (isset($user->profile->status_message) && $user->profile->status_message)
+    <div class="status-message">
+        {{ $user->profile->status_message }}
+        <span class="status-set small">
+            Status set {!! pretty_date($user->profile->status_set_on) !!}
+        </span>
+    </div>
+@endif
+
 @if (isset($user->profile->parsed_text))
     <div class="card mb-3" style="clear:both;">
         <div class="card-body">

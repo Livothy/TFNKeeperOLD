@@ -15,6 +15,7 @@ use App\Models\Item\ItemCategory;
 use App\Models\User\User;
 use App\Models\User\UserCurrency;
 use App\Models\User\UserUpdateLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -67,6 +68,13 @@ class UserController extends Controller {
         $aliases = $this->user->aliases();
         if (!Auth::check() || !(Auth::check() && Auth::user()->hasPower('edit_user_info'))) {
             $aliases->visible();
+        }
+
+        if ((isset($this->user->profile->status_message) && $this->user->profile->status_message) && isset($this->user->profile->clear_status_on)) {
+            if ($this->user->profile->clear_status_on < Carbon::now()) {
+                $this->user->profile->status_message = null;
+                $this->user->profile->save();
+            }
         }
 
         return view('user.profile', [
