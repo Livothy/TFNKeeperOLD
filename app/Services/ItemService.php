@@ -479,6 +479,29 @@ class ItemService extends Service {
                 throw new \Exception('Failed to log admin action.');
             }
 
+            $this_tag = $item->tags()->where('tag', $tag)->first();
+            if ($this_tag && $this_tag->tag == 'foreground' && isset($this_tag->getData()['background-image'])) {
+                $full = explode('/', (explode('?', $this_tag->getData()['background-image'])[0]));
+                $filename = end($full);
+                $path = implode('/', array_slice($full, 0, -1));
+
+                // Delete the image at this location
+                if (is_file($path.'/'.$filename)) {
+                    $this->deleteImage($path, $filename);
+                }
+            }
+
+            $this_tag = $item->tags()->where('tag', $tag)->first();
+            if($this_tag && $this_tag->tag == 'background' && isset($this_tag->getData()['background-image']))
+            {
+                $full = explode('/', (explode('?',$this_tag->getData()['background-image'])[0]));
+                $filename = end($full);
+                $path = implode('/',array_slice($full, 0, -1));
+
+                // Delete the image at this location
+                if(is_file($path.'/'.$filename)) $this->deleteImage($path, $filename);
+            }
+
             $item->tags()->where('tag', $tag)->delete();
 
             return $this->commitReturn(true);
