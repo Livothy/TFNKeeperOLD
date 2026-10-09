@@ -111,6 +111,24 @@
                         </div>
                     @endif
                 </div>
+
+                <div class="row no-gutters">
+                    <div class="col-lg-4 col-5">
+                        <h5>Phenotype</h5>
+                    </div>
+                    <div class="col-lg-8 col-7 pl-1">
+                        {!! $pheno !!}
+                    </div>
+                </div>
+                <div class="row no-gutters">
+                    <div class="col-lg-4 col-5">
+                        <h5>Genotype</h5>
+                    </div>
+                    <div class="col-lg-8 col-7 pl-1">
+                        {!! $geno !!}
+                    </div>
+                </div>
+
                 <div>
                     <strong>Uploaded:</strong> {!! pretty_date($image->created_at) !!}
                 </div>

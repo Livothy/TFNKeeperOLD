@@ -789,3 +789,14 @@ tr.accountbound {
 @media only screen and (max-width: 600px) {
     .comment_replies { padding-left:1rem;}
 }
+
+/* DESIGN HUB *************************************************************************************/
+.marking-output a {
+	color: inherit;
+	text-decoration: dotted underline;
+	text-decoration-color: var(--blue);
+	transition: 250ms all;
+}
+.marking-output a:hover {
+	color: var(--blue);
+}

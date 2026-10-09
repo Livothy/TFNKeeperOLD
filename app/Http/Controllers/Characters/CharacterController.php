@@ -115,8 +115,13 @@ class CharacterController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCharacter($slug) {
+        $markings = $this->character->getMarkingFinalArray();
+
         return view('character.character', [
             'character'             => $this->character,
+            'markings'              => $markings,
+            'pheno'                 => $this->character->getMarkingLinkedArray($markings),
+            'geno'                  => $this->character->getMarkingLinkedArray($markings, 'genotype'),
             'showMention'           => true,
             'extPrevAndNextBtnsUrl' => '',
         ]);

@@ -28,5 +28,13 @@ return [
         'title' => 'Credits',
         'text'  => 'This page will contain credits for code, art, ect that has been used on your site!',
     ],
+    'dh-start' => [
+        'title' => 'Design Hub Start',
+        'text'  => 'This page contains the start of the Design Hub page.',
+    ],
+    'dh-end' => [
+        'title' => 'Design Hub End',
+        'text'  => 'This page contains the end of the Design Hub page.',
+    ],
 
 ];

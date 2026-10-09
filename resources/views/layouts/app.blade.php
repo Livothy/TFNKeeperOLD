@@ -82,6 +82,10 @@
         <link href="{{ asset('css/custom.css') . '?v=' . filemtime(public_path('css/custom.css')) }}" rel="stylesheet">
     @endif
 
+    @if (str_contains(url()->current(), '/design-hub'))
+        <link href="{{ asset('css/designhub.css') . '?v=' . filemtime(public_path('css/designhub.css')) }}" rel="stylesheet">
+    @endif
+
     @include('feed::links')
 </head>
 

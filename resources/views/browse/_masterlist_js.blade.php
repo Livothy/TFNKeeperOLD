@@ -87,5 +87,50 @@
                 $(this).parent().parent().parent().remove();
             });
         }
+
+        //Markings
+        var $markingBody = $('#markingBody');
+        var $markingSelect = $('#markingContent .marking-block');
+        var $addMarkingButton = $('.add-marking-button');
+
+        // handle the ones that were already there
+        var $markingFeatures = $('#markingBody .marking-block');
+        @if (config('lorekeeper.extensions.organised_traits_dropdown'))
+            $markingFeatures.find('.selectize').selectize({
+                render: {
+                    item: markingSelectedRender
+                }
+            });
+        @else
+            $markingFeatures.find('.selectize').selectize();
+        @endif
+        addRemoveListener($markingFeatures);
+
+        $addMarkingButton.on('click', function(e) {
+            e.preventDefault();
+            var $clone = $markingSelect.clone();
+            $markingBody.append($clone);
+            @if (config('lorekeeper.extensions.organised_traits_dropdown'))
+                $clone.find('.selectize').selectize({
+                    render: {
+                        item: markingSelectedRender
+                    }
+                });
+            @else
+                $clone.find('.selectize').selectize();
+            @endif
+            addRemoveListener($clone);
+        });
+
+        function markingSelectedRender(item, escape) {
+            return '<div><span>' + escape(item["text"].trim()) + ' (' + escape(item["optgroup"].trim()) + ')' + '</span></div>';
+        }
+
+        function addRemoveListener($node) {
+            $node.find('.marking-remove').on('click', function(e) {
+                e.preventDefault();
+                $(this).parent().parent().parent().remove();
+            });
+        }
     });
 </script>

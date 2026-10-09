@@ -191,6 +191,33 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('traits/edit/{id?}', 'FeatureController@postCreateEditFeature');
     Route::post('traits/delete/{id}', 'FeatureController@postDeleteFeature');
 
+    // MARKINGS
+    Route::get('markings', 'MarkingController@getMarkingIndex');
+    Route::get('markings/create', 'MarkingController@getCreateMarking');
+    Route::get('markings/edit/{id}', 'MarkingController@getEditMarking');
+    Route::get('markings/delete/{id}', 'MarkingController@getDeleteMarking');
+    Route::post('markings/create', 'MarkingController@postCreateEditMarking');
+    Route::post('markings/edit/{id}', 'MarkingController@postCreateEditMarking');
+    Route::post('markings/delete/{id}', 'MarkingController@postDeleteMarking');
+
+    // BASES
+    Route::get('bases', 'BaseController@getBasesIndex');
+    Route::get('base/create', 'BaseController@getCreateBase');
+    Route::get('base/edit/{id}', 'BaseController@getEditBase');
+    Route::get('base/delete/{id}', 'BaseController@getDeleteBase');
+    Route::post('base/create', 'BaseController@postCreateEditBase');
+    Route::post('base/edit/{id}', 'BaseController@postCreateEditBase');
+    Route::post('base/delete/{id}', 'BaseController@postDeleteBase');
+
+    // BASES
+    Route::get('carriers', 'CarrierController@getCarriersIndex');
+    Route::get('carrier/create', 'CarrierController@getCreateCarrier');
+    Route::get('carrier/edit/{id}', 'CarrierController@getEditCarrier');
+    Route::get('carrier/delete/{id}', 'CarrierController@getDeleteCarrier');
+    Route::post('carrier/create', 'CarrierController@postCreateEditCarrier');
+    Route::post('carrier/edit/{id}', 'CarrierController@postCreateEditCarrier');
+    Route::post('carrier/delete/{id}', 'CarrierController@postDeleteCarrier');
+
     // CHARACTER CATEGORIES
     Route::get('character-categories', 'CharacterCategoryController@getIndex');
     Route::get('character-categories/create', 'CharacterCategoryController@getCreateCharacterCategory');

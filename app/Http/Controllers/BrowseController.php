@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Facades\Settings;
+use App\Models\Base\Base;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterImage;
+use App\Models\Character\CharacterMarking;
 use App\Models\Character\Sublist;
 use App\Models\Feature\Feature;
+use App\Models\Marking\Marking;
 use App\Models\Rank\Rank;
 use App\Models\Rarity;
 use App\Models\Species\Species;
@@ -208,6 +211,12 @@ class BrowseController extends Controller {
                 $query->where('owner_url', 'LIKE', '%'.$ownerUrl.'%');
             });
         }
+        if ($request->get('base')) {
+            $base = $request->get('base');
+            $query->where(function ($query) use ($base) {
+                $query->where('base', 'LIKE', '%'.$base.'%');
+            });
+        }
 
         // Search only main images
         if (!$request->get('search_images')) {
@@ -259,6 +268,12 @@ class BrowseController extends Controller {
         }
 
         $query->whereIn('id', $imageQuery->pluck('character_id')->toArray());
+
+        if ($request->get('marking_id')) {
+            $markingIds = $request->get('marking_id');
+            $characterIds = CharacterMarking::whereIn('marking_id', $markingIds)->pluck('character_id')->toArray();
+            $query->whereIn('characters.id', $characterIds);
+        }
 
         if ($request->get('is_gift_art_allowed')) {
             switch ($request->get('is_gift_art_allowed')) {
@@ -316,15 +331,17 @@ class BrowseController extends Controller {
         }
 
         return view('browse.masterlist', [
-            'isMyo'       => false,
-            'characters'  => $query->paginate(24)->appends($request->query()),
-            'categories'  => [0 => 'Any Category'] + CharacterCategory::whereNotIn('id', $subCategories)->visible(Auth::check() ? Auth::user() : null)->orderBy('character_categories.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'specieses'   => [0 => 'Any Species'] + Species::whereNotIn('id', $subSpecies)->visible(Auth::check() ? Auth::user() : null)->orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'subtypes'    => [0 => 'Any Subtype'] + Subtype::visible(Auth::check() ? Auth::user() : null)->orderBy('subtypes.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'rarities'    => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'features'    => Feature::getDropdownItems(),
-            'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),
-            'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'isMyo'        => false,
+            'characters'   => $query->paginate(24)->appends($request->query()),
+            'categories'   => [0 => 'Any Category'] + CharacterCategory::whereNotIn('id', $subCategories)->visible(Auth::check() ? Auth::user() : null)->orderBy('character_categories.sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'specieses'    => [0 => 'Any Species'] + Species::whereNotIn('id', $subSpecies)->visible(Auth::check() ? Auth::user() : null)->orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'subtypes'     => [0 => 'Any Subtype'] + Subtype::visible(Auth::check() ? Auth::user() : null)->orderBy('subtypes.sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'rarities'     => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'features'     => Feature::getDropdownItems(),
+            'markings'     => Marking::getDropdownItems(),
+            'bases'        => ['' => 'Select Base(s)'] + Base::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
+            'sublists'     => Sublist::orderBy('sort', 'DESC')->get(),
+            'userOptions'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
 
@@ -381,6 +398,12 @@ class BrowseController extends Controller {
                 $query->where('owner_url', 'LIKE', '%'.$ownerUrl.'%');
             });
         }
+        if ($request->get('base')) {
+            $base = $request->get('base');
+            $query->where(function ($query) use ($base) {
+                $query->where('base', 'LIKE', '%'.$base.'%');
+            });
+        }
 
         // Search only main images
         if (!$request->get('search_images')) {
@@ -428,6 +451,12 @@ class BrowseController extends Controller {
             }
         }
 
+        if ($request->get('marking_id')) {
+            $markingIds = $request->get('marking_id');
+            $characterIds = CharacterMarking::whereIn('marking_id', $markingIds)->pluck('character_id')->toArray();
+            $query->whereIn('characters.id', $characterIds);
+        }
+
         $query->whereIn('id', $imageQuery->pluck('character_id')->toArray());
 
         switch ($request->get('sort')) {
@@ -453,13 +482,15 @@ class BrowseController extends Controller {
         }
 
         return view('browse.myo_masterlist', [
-            'isMyo'       => true,
-            'slots'       => $query->paginate(24)->appends($request->query()),
-            'specieses'   => [0 => 'Any Species'] + Species::visible(Auth::check() ? Auth::user() : null)->orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'rarities'    => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'features'    => Feature::getDropdownItems(),
-            'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),
-            'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'isMyo'        => true,
+            'slots'        => $query->paginate(24)->appends($request->query()),
+            'specieses'    => [0 => 'Any Species'] + Species::visible(Auth::check() ? Auth::user() : null)->orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'rarities'     => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'features'     => Feature::getDropdownItems(),
+            'markings'     => Marking::getDropdownItems(),
+            'bases'        => ['' => 'Select Base(s)'] + Base::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
+            'sublists'     => Sublist::orderBy('sort', 'DESC')->get(),
+            'userOptions'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
 

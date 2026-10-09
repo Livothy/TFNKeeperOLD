@@ -77,6 +77,17 @@
                     </li>
                 @endif
                 <li class="nav-item dropdown">
+                    <a id="designhubDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        Design Guides
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="designhubDropdown">
+                        <a class="dropdown-item" href="{{ url('design-hub') }}">
+                            Design Hub
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
                     <a id="browseDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         Browse
                     </a>

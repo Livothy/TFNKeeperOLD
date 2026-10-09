@@ -30,8 +30,14 @@
                 @endif
             </div>
         @endif
-        <div class="world-entry-text parsed-text">
-            {!! $feature->parsed_description !!}
-        </div>
+
+        @if ($feature->full_page)
+            <a href="{{ $feature->getUrlAttribute() }}" class="btn btn-primary mt-4">View Guide</a>
+        @else
+            <div class="world-entry-text parsed-text">
+                {!! $feature->parsed_description !!}
+            </div>
+        @endif
+
     </div>
 </div>

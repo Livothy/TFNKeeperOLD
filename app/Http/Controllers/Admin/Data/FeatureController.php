@@ -80,7 +80,7 @@ class FeatureController extends Controller {
     public function postCreateEditFeatureCategory(Request $request, FeatureService $service, $id = null) {
         $id ? $request->validate(FeatureCategory::$updateRules) : $request->validate(FeatureCategory::$createRules);
         $data = $request->only([
-            'name', 'description', 'image', 'remove_image', 'is_visible',
+            'name', 'description', 'image', 'remove_image', 'is_visible', 'full_page',
         ]);
         if ($id && $service->updateFeatureCategory(FeatureCategory::find($id), $data, Auth::user())) {
             flash('Category updated successfully.')->success();
@@ -238,7 +238,7 @@ class FeatureController extends Controller {
     public function postCreateEditFeature(Request $request, FeatureService $service, $id = null) {
         $id ? $request->validate(Feature::$updateRules) : $request->validate(Feature::$createRules);
         $data = $request->only([
-            'name', 'species_id', 'subtype_id', 'rarity_id', 'feature_category_id', 'description', 'image', 'remove_image', 'is_visible',
+            'name', 'species_id', 'subtype_id', 'rarity_id', 'feature_category_id', 'description', 'image', 'remove_image', 'is_visible', 'full_page',
         ]);
         if ($id && $service->updateFeature(Feature::find($id), $data, Auth::user())) {
             flash('Trait updated successfully.')->success();

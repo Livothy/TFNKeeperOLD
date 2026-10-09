@@ -72,9 +72,19 @@
         {!! Form::textarea('description', $feature->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
-    <div class="form-group">
-        {!! Form::checkbox('is_visible', 1, $feature->id ? $feature->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the trait will not be visible in the trait list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::checkbox('is_visible', 1, $feature->id ? $feature->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the trait will not be visible in the trait list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::checkbox('full_page', 1, $feature->id ? $feature->full_page : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('full_page', 'Enable Full Page', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, the trait have a full page on the design hub page as well as a dedicated card in the encyclopedia. Helpful for when this trait requires a guide.') !!}
+            </div>
+        </div>
     </div>
 
     <div class="text-right">

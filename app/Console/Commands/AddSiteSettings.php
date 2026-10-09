@@ -83,6 +83,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('comment_dislikes_enabled', 0, '0: Dislikes disabled, 1: Dislikes enabled.');
 
+        $this->addSiteSetting('designhub_trait_categories', 0, 'Enter in all of the trait categories you want to display on the design hub page. Seperate by comma. EX: "1,2,3"');
+
         $this->line("\nSite settings up to date!");
     }
 
