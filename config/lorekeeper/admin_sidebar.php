@@ -232,10 +232,6 @@ return [
                 'name' => 'Raid Bosses',
                 'url'  => 'admin/data/raid-bosses',
             ],
-            [
-                'name' => 'Raid Logs',
-                'url'  => 'admin/data/raid-logs',
-            ],
         ],
     ],
     'Raffles'    => [

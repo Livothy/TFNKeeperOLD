@@ -431,6 +431,10 @@ class RaidService extends Service {
             if (!$raid->bosses->count()) {
                 throw new \Exception('This '.__('raids.raid').' has no '.__('raids.boss').' to attack.');
             }
+            // Attacks always cost an item or currency (it's what limits attacks), and the attack panel needs one to render
+            if (empty($raid->damage['type']) || empty($raid->damage['id']) || empty($raid->attackAsset()['asset'])) {
+                throw new \Exception('Choose the item or currency players spend to attack this '.__('raids.raid').' before starting it.');
+            }
             if ($raid->end_at && $raid->end_at < Carbon::now()) {
                 throw new \Exception('This '.__('raids.raid').'\'s ending time has already passed.');
             }
@@ -498,6 +502,9 @@ class RaidService extends Service {
             if (!$raid) {
                 throw new \Exception('The specified '.__('raids.raid').' could not be found.');
             }
+            if ($raid->distributed_at || $raid->status == 3) {
+                throw new \Exception('This '.__('raids.raid').'\'s rewards have already been distributed.');
+            }
             if ($raid->status != 2) {
                 throw new \Exception('This '.__('raids.raid').' is currently ongoing. It must be concluded first before distributing rewards.');
             }
@@ -564,7 +571,13 @@ class RaidService extends Service {
             DB::beginTransaction();
 
             try {
-                Raid::shouldBeVisible()->has('bosses')->update(['is_visible' => 1, 'status' => 1]);
+                // Only start raids that have an attack cost set; the rest wait until staff choose one
+                foreach (Raid::shouldBeVisible()->has('bosses')->get() as $raid) {
+                    if (empty($raid->damage['type']) || empty($raid->damage['id']) || empty($raid->attackAsset()['asset'])) {
+                        continue;
+                    }
+                    $raid->update(['is_visible' => 1, 'status' => 1]);
+                }
                 $bosses = RaidBoss::where('is_visible', 0)->whereHas('raid', function ($r) {
                     $r->where('is_visible', 1)->where('status', 1);
                 })->update(['is_visible' => 1]);

@@ -23,7 +23,7 @@
         @endif
     </div>
 @elseif ($raid->status == 1)
-    @if ($raid->damage)
+    @if (!empty($raid->damage['type']) && !empty($raid->damage['id']) && !empty($raid->attackAsset()['asset']))
         <div class="text-center">
             Requires <b>{{ $raid->attackAsset()['quantity'] }} {!! $raid->attackAsset()['asset']->displayName !!} ({{ $raid->damage['type'] }})</b> to attack.
         </div>
@@ -69,5 +69,7 @@
                 You lack the requirements to make an attack.
             </div>
         @endif
+    @else
+        <div class="text-center text-muted">This {{ __('raids.raid') }} isn't ready to attack yet.</div>
     @endif
 @endif
