@@ -67,4 +67,8 @@ return [
         'name'        => 'Comment on Sales',
         'description' => 'Allow rank to comment on sales in preview mode.',
     ],
+    'manage_user_ads' => [
+        'name'        => 'Manage User Ads',
+        'description' => 'Allow rank to edit/delete user ads.',
+    ],
 ];

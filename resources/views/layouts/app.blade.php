@@ -104,6 +104,10 @@
                     @yield('sidebar')
                 </div>
                 <div class="main-content col-lg-8 p-4">
+                    @guest
+                    @else
+                        @include('layouts._user_ads')
+                    @endguest
                     <div>
                         @if (Settings::get('is_maintenance_mode'))
                             <div class="alert alert-secondary">

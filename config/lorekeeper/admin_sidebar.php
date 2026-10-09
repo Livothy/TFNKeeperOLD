@@ -67,6 +67,15 @@ return [
             ],
         ],
     ],
+    'User_Ads' => [
+        'power' => 'manage_user_ads',
+        'links' => [
+            [
+                'name' => 'User Ads',
+                'url'  => 'admin/user_ads',
+            ],
+        ],
+    ],
     'Users'      => [
         'power' => 'edit_user_info',
         'links' => [

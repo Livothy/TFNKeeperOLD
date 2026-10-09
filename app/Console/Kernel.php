@@ -31,6 +31,8 @@ class Kernel extends ConsoleKernel {
             ->daily();
         $schedule->command('index-search-pages')
             ->daily();
+        $schedule->command('clear-week-old-user-ads')
+            ->daily();
     }
 
     /**
