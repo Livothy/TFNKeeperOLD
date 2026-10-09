@@ -215,6 +215,10 @@ return [
                 'name' => 'Items',
                 'url'  => 'admin/data/items',
             ],
+            [
+                'name' => 'Random Generators',
+                'url'  => 'admin/data/random',
+            ],
         ],
     ],
     'Raffles'    => [

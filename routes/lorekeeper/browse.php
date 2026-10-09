@@ -194,3 +194,11 @@ Route::group(['prefix' => 'design-hub'], function () {
     Search Function
 **************************************************************************************************/
 Route::get('asearch', 'SearchController@siteSearch');
+
+/**************************************************************************************************
+    Generators
+**************************************************************************************************/
+Route::group(['prefix' => 'generators'], function () {
+    Route::get('/', 'GeneratorController@getGenerators');
+    Route::get('{id}', 'GeneratorController@getGenerator');
+});
