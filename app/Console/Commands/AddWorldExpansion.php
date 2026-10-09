@@ -82,6 +82,19 @@ class AddWorldExpansion extends Command {
         } else {
             $this->line('Skipped: WE_user_factions');
         }
+        // TFN: users choose a faction once; later changes go through staff
+        if (!DB::table('site_settings')->where('key', 'WE_faction_choose_once')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key'         => 'WE_faction_choose_once',
+                    'value'       => 0,
+                    'description' => '0: Off. 1: Users can choose a faction only while they have none; after that only staff can change it.',
+                ],
+            ]);
+            $this->info('Added:   WE_faction_choose_once / Default: 0');
+        } else {
+            $this->line('Skipped: WE_faction_choose_once');
+        }
 
         if (!DB::table('site_settings')->where('key', 'WE_character_locations')->exists()) {
             DB::table('site_settings')->insert([

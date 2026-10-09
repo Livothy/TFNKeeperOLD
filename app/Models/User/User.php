@@ -623,6 +623,10 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @return string
      */
     public function getCanChangeFactionAttribute() {
+        // TFN: with "choose once", a user picks a faction a single time; later changes go through staff
+        if (Settings::get('WE_faction_choose_once') && $this->faction_id) {
+            return false;
+        }
         if (!isset($this->faction_changed)) {
             return true;
         }

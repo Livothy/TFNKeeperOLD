@@ -28,6 +28,10 @@ class UserAdsService extends Service {
         DB::beginTransaction();
 
         try {
+            // TFN: one active ad per user (ads clear after a week, or the user can delete theirs)
+            if (UserAds::where('user_id', $user->id)->exists()) {
+                throw new \Exception('You already have an active ad. Delete it or wait for it to expire before posting another.');
+            }
             $data['text'] = parse($data['text']);
             $data['user_id'] = $user->id;
 

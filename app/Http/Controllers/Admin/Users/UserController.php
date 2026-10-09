@@ -161,7 +161,7 @@ class UserController extends Controller {
             flash('Invalid user.')->error();
         } elseif (!Auth::user()->canEditRank($user->rank)) {
             flash('You cannot edit the information of a user that has a higher rank than yourself.')->error();
-        } elseif ($service->updateFaction($request->input('faction'), $user)) {
+        } elseif ($service->updateFaction($request->input('faction'), $user, true)) {
             flash('Faction updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {

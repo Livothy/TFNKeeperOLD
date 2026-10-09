@@ -176,6 +176,10 @@
                     </div>
                 </div>
                 {!! Form::close() !!}
+            @elseif (Settings::get('WE_faction_choose_once') && Auth::user()->faction_id)
+                <div class="alert alert-info">
+                    You have joined {!! Auth::user()->faction->fullDisplayName !!}. To change your faction, submit a faction change request for staff to review.
+                </div>
             @else
                 <div class="alert alert-warning">
                     <strong>You can't change your faction right now.</strong>

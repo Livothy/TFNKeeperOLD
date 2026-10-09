@@ -175,7 +175,7 @@ class UserService extends Service {
      *
      * @return User
      */
-    public function updateFaction($id, $user) {
+    public function updateFaction($id, $user, $staffOverride = false) {
         DB::beginTransaction();
 
         try {
@@ -193,7 +193,7 @@ class UserService extends Service {
 
             $limit = Settings::get('WE_change_timelimit');
 
-            if ($user->canChangeFaction) {
+            if ($staffOverride || $user->canChangeFaction) {
                 $user->faction_id = $id;
                 $user->faction_changed = Carbon::now();
                 $user->save();
