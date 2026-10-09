@@ -98,9 +98,12 @@
                     var $form = $('#prompt-form');
                     if ($prompt.val() != '') {
                         $.get('{{ url('submissions/new/form') }}/' + $prompt.val(), function(data) {
-                            tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {
-                                format: 'html'
-                            });
+                            // Only fill an empty comment box, so typed text and saved drafts aren't overwritten
+                            if (data.trim() !== '' && tinymce.activeEditor && tinymce.activeEditor.getContent({format: 'text'}).trim() === '') {
+                                tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {
+                                    format: 'html'
+                                });
+                            }
                         });
                     }
 
@@ -108,9 +111,12 @@
                     $prompt.on('change', function(e) {
                         if ($(this).val() != '') {
                             $.get('{{ url('submissions/new/form') }}/' + $(this).val(), function(data) {
-                                tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {
-                                    format: 'html'
-                                });
+                                // Only fill an empty comment box, so typed text and saved drafts aren't overwritten
+                                if (data.trim() !== '' && tinymce.activeEditor && tinymce.activeEditor.getContent({format: 'text'}).trim() === '') {
+                                    tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {
+                                        format: 'html'
+                                    });
+                                }
                             });
                         }
                         $rewards.load('{{ url('submissions/new/prompt') }}/' + $(this).val());
