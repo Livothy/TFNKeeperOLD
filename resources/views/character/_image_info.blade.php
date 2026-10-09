@@ -112,6 +112,14 @@
                     @endif
                 </div>
 
+                @php
+                    // Design Hub: pages that don't pass the marking arrays (profile, images) build them here
+                    if (!isset($pheno) || !isset($geno)) {
+                        $markingArray = $image->character->getMarkingFinalArray();
+                        $pheno = $pheno ?? $image->character->getMarkingLinkedArray($markingArray);
+                        $geno = $geno ?? $image->character->getMarkingLinkedArray($markingArray, 'genotype');
+                    }
+                @endphp
                 <div class="row no-gutters">
                     <div class="col-lg-4 col-5">
                         <h5>Phenotype</h5>
