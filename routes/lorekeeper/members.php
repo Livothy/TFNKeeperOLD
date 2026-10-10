@@ -308,3 +308,14 @@ Route::group(['prefix' => __('awards.awardcase'), 'namespace' => 'Users'], funct
 
     Route::get('selector', 'AwardCaseController@getSelector');
 });
+
+/**************************************************************************************************
+    Higher or Lower
+**************************************************************************************************/
+
+Route::group(['prefix' => 'higher-or-lower'], function() {
+    Route::get('/', 'HolController@getIndex');
+
+    Route::get('play', 'HolController@playHol');
+    Route::post('play/guess', 'HolController@postGuess');
+});

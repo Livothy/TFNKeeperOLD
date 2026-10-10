@@ -37,6 +37,8 @@ class Kernel extends ConsoleKernel {
             ->daily();
         $schedule->command('reward-ranks')
             ->daily();
+        $schedule->command('reset-hol')
+            ->daily();
 
         $schedule->command('update-timed-daily')
             ->everyMinute();
