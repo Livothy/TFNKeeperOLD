@@ -260,6 +260,10 @@ return [
                 'url'  => 'admin/data/periodic-defaults',
             ],
             [
+                'name' => 'Fetch Quests',
+                'url'  => 'admin/data/fetch-quests',
+            ],
+            [
                 'name' => 'Forms & Polls',
                 'url'  => 'admin/forms',
             ],

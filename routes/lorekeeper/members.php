@@ -242,6 +242,13 @@ Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function () {
 /**************************************************************************************************
     Shops
 **************************************************************************************************/
+// FETCH QUESTS
+Route::group(['prefix' => 'fetch'], function () {
+    Route::get('/', 'FetchQuestController@getIndex');
+    Route::get('/new/{id}', 'FetchQuestController@getFetchQuest');
+    Route::post('/new/{id}', 'FetchQuestController@postFetchQuest');
+});
+
 // FORMS & POLLS
 Route::group(['prefix' => 'forms'], function () {
     Route::post('/send/{id}', 'SiteFormController@postSiteForm');

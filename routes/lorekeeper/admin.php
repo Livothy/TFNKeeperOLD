@@ -446,6 +446,15 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('periodic-defaults/edit/{id}', 'PeriodicRewardsController@postCreateEditPeriodicDefault');
     Route::get('periodic-defaults/delete/{id}', 'PeriodicRewardsController@getDeletePeriodicDefault');
     Route::post('periodic-defaults/delete/{id}', 'PeriodicRewardsController@postDeletePeriodicDefault');
+
+    // FETCH QUESTS
+    Route::get('fetch-quests', 'FetchQuestController@getFetchQuestIndex');
+    Route::get('fetch-quests/create', 'FetchQuestController@getCreateFetchQuest');
+    Route::get('fetch-quests/edit/{id}', 'FetchQuestController@getEditFetchQuest');
+    Route::get('fetch-quests/delete/{id}', 'FetchQuestController@getDeleteFetchQuest');
+    Route::post('fetch-quests/create', 'FetchQuestController@postCreateEditFetchQuest');
+    Route::post('fetch-quests/edit/{id?}', 'FetchQuestController@postCreateEditFetchQuest');
+    Route::post('fetch-quests/delete/{id}', 'FetchQuestController@postDeleteFetchQuest');
 });
 
 // RAIDS

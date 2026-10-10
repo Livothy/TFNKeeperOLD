@@ -46,6 +46,9 @@
                             <a class="dropdown-item" href="{{ url('higher-or-lower') }}">
                                 Higher or Lower
                             </a>
+                            <a class="dropdown-item" href="{{ url('fetch') }}">
+                                Fetch Quests
+                            </a>
                             <a class="dropdown-item" href="{{ url('awardcase') }}">
                                 {{ ucfirst(__('awards.awards')) }}
                             </a>

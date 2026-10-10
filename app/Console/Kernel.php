@@ -39,6 +39,8 @@ class Kernel extends ConsoleKernel {
             ->daily();
         $schedule->command('reset-hol')
             ->daily();
+        $schedule->command('change-fetch-item')
+            ->hourly();
 
         $schedule->command('update-timed-daily')
             ->everyMinute();

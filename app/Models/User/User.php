@@ -21,6 +21,8 @@ use App\Models\Shop\ShopLog;
 use App\Models\Submission\Submission;
 use App\Models\Volume\Volume;
 use App\Models\Border\Border;
+use App\Models\FetchQuest\FetchLog;
+use App\Models\FetchQuest\FetchQuest;
 use App\Models\WorldExpansion\Faction;
 use App\Models\WorldExpansion\FactionRankMember;
 use App\Models\WorldExpansion\Location;
@@ -1254,5 +1256,29 @@ class User extends Authenticatable implements MustVerifyEmail {
         }
         //if no border return standard avatar style
         return $styling . $avatar . '</div>';
+    }
+
+    /**
+     * Fetch Quests: when the user can next turn in this fetch quest (null = now).
+     *
+     * @param int $id
+     *
+     * @return \Carbon\Carbon|null
+     */
+    public function fetchCooldown($id) {
+        if (\App\Facades\Settings::get('fetch_timer_global')) {
+            // global timer: the most recent turn-in of any quest locks every quest
+            $log = FetchLog::where('user_id', $this->id)->orderBy('id', 'DESC')->first();
+            $cooldown = $log && $log->fetch ? $log->fetch->cooldown : 0;
+        } else {
+            $log = FetchLog::where('user_id', $this->id)->where('fetch_id', $id)->orderBy('id', 'DESC')->first();
+            $cooldown = optional(FetchQuest::find($id))->cooldown ?? 0;
+        }
+        if (!$log) {
+            return null;
+        }
+        $timer = $log->created_at->copy()->addMinutes((int) $cooldown);
+
+        return $timer <= Carbon::now() ? null : $timer;
     }
 }

@@ -101,6 +101,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('character_title_display', 0, '0: Character titles only show in image info. 1: Titles also show alongside category, species and rarity.');
 
+        $this->addSiteSetting('fetch_timer_global', 1, 'Fetch Quests: does completing one fetch quest lock you out of all other ones? 0 = no, 1 = yes. Uses the most recent completed fetch for the timer.');
+
         $this->line("\nSite settings up to date!");
     }
 
