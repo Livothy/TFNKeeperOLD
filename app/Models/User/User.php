@@ -265,6 +265,13 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     /**
+     * Get all of the user's challenge logs.
+     */
+    public function challengeLogs() {
+        return $this->hasMany('App\Models\Challenge\UserChallenge');
+    }
+
+    /**
      * Gets all of a user's liked / disliked comments.
      */
     public function commentLikes() {
@@ -842,6 +849,20 @@ class User extends Authenticatable implements MustVerifyEmail {
         } else {
             return $query->paginate(30);
         }
+    }
+
+    /**
+     * Checks if the user can register for a new challenge.
+     *
+     * @return bool
+     */
+    public function getCanChallengeAttribute() {
+        $limit = (int) Settings::get('challenges_concurrent');
+        if ($limit < 1) {
+            return false;
+        }
+
+        return $this->challengeLogs()->active()->count() < $limit;
     }
 
     /**

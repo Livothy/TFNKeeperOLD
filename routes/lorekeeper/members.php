@@ -389,3 +389,11 @@ Route::group(['prefix' => 'hunts'], function () {
     Route::get('targets/{pageId}', 'HuntController@getTarget');
     Route::post('targets/claim', 'HuntController@postClaimTarget');
 });
+
+Route::group(['prefix' => 'challenges'], function () {
+    Route::get('my-challenges', 'ChallengeController@getList');
+    Route::get('new/{id}', 'ChallengeController@getRegister')->where('id', '[0-9]+');
+    Route::get('view/{id}', 'ChallengeController@getLog')->where('id', '[0-9]+');
+    Route::post('new/{id}', 'ChallengeController@postRegister')->where('id', '[0-9]+');
+    Route::post('edit/{id}', 'ChallengeController@postEditChallenge')->where('id', '[0-9]+');
+});

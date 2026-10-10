@@ -280,6 +280,10 @@ return [
                 'url'  => 'admin/data/hunts',
             ],
             [
+                'name' => 'Challenges',
+                'url'  => 'admin/data/challenges',
+            ],
+            [
                 'name' => 'Forms & Polls',
                 'url'  => 'admin/forms',
             ],

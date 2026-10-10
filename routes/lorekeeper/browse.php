@@ -313,3 +313,8 @@ Route::group(['prefix' => 'world', 'namespace' => 'WorldExpansion'], function ()
 Route::group(['prefix' => 'event-tracking'], function () {
     Route::get('/', 'EventController@getEventTracking');
 });
+
+Route::group(['prefix' => 'challenges'], function () {
+    Route::get('/', 'ChallengeController@getIndex');
+    Route::get('{id}', 'ChallengeController@getChallenge')->where(['id' => '[0-9]+']);
+});

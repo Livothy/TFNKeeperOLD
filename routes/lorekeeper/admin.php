@@ -477,6 +477,14 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('hunts/targets/edit/{id}', 'HuntController@postCreateEditHuntTarget');
     Route::get('hunts/targets/delete/{id}', 'HuntController@getDeleteHuntTarget');
     Route::post('hunts/targets/delete/{id}', 'HuntController@postDeleteHuntTarget');
+
+    Route::get('challenges', 'ChallengeController@getChallengeIndex');
+    Route::get('challenges/create', 'ChallengeController@getCreateChallenge');
+    Route::get('challenges/edit/{id}', 'ChallengeController@getEditChallenge');
+    Route::get('challenges/delete/{id}', 'ChallengeController@getDeleteChallenge');
+    Route::post('challenges/create', 'ChallengeController@postCreateEditChallenge');
+    Route::post('challenges/edit/{id}', 'ChallengeController@postCreateEditChallenge');
+    Route::post('challenges/delete/{id}', 'ChallengeController@postDeleteChallenge');
 });
 
 // RAIDS
@@ -926,4 +934,11 @@ Route::group(['prefix' => 'event-settings', 'middleware' => 'power:edit_inventor
     Route::get('clear', 'EventController@getClearEventCurrency');
     Route::post('clear', 'EventController@postClearEventCurrency');
     Route::post('teams', 'EventController@postEventTeams');
+});
+
+// CHALLENGE LOGS
+Route::group(['prefix' => 'challenges', 'middleware' => 'power:manage_submissions'], function () {
+    Route::get('/', 'ChallengeController@getIndex');
+    Route::get('/{status}', 'ChallengeController@getIndex')->where('status', 'active|old');
+    Route::post('edit/{id}/{action}', 'ChallengeController@postChallenge');
 });
