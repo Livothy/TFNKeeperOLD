@@ -13,7 +13,7 @@ class UserSettings extends Model {
     protected $fillable = [
         'is_fto', 'submission_count', 'banned_at', 'ban_reason', 'birthday_setting',
         'deactivate_reason', 'deactivated_at',
-        'allow_character_likes', 'border_settings', 'hol_plays',
+        'allow_character_likes', 'border_settings', 'hol_plays', 'selected_character_id',
     ];
 
     /**
@@ -52,5 +52,12 @@ class UserSettings extends Model {
      */
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the character the user has selected, if it is still visible and theirs.
+     */
+    public function selectedCharacter() {
+        return $this->belongsTo('App\Models\Character\Character', 'selected_character_id')->visible()->where('user_id', $this->user_id);
     }
 }

@@ -125,6 +125,14 @@
     </div>
 @endif
 
+@if ($user->settings->selectedCharacter)
+    <div class="row justify-content-center" style="clear:both;">
+        <div class="col-md-6">
+            @include('widgets._selected_character', ['character' => $user->settings->selectedCharacter, 'user' => $user, 'fullImage' => true])
+        </div>
+    </div>
+@endif
+
 <div class="card-deck mb-4 profile-assets" style="clear:both;">
     <div class="card profile-currencies profile-assets-card">
         <div class="card-body text-center">

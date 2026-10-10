@@ -1077,6 +1077,39 @@ class CharacterManager extends Service {
     }
 
     /**
+     * Selects a character to feature on the user's profile, or clears it.
+     *
+     * @param array $data
+     * @param User  $user
+     *
+     * @return bool
+     */
+    public function selectCharacter($data, $user) {
+        DB::beginTransaction();
+
+        try {
+            $character = null;
+            if (isset($data['character_id']) && $data['character_id']) {
+                // Must be visible and belong to the user
+                $character = Character::visible()->where('id', (int) $data['character_id'])->where('user_id', $user->id)->first();
+                if (!$character) {
+                    throw new \Exception('Invalid character selected.');
+                }
+            }
+
+            $user->settings->update([
+                'selected_character_id' => $character ? $character->id : null,
+            ]);
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Sorts a user's characters.
      *
      * @param array $data
@@ -1843,6 +1876,11 @@ class CharacterManager extends Service {
                 $recipient->settings->is_fto = 0;
             }
             $recipient->settings->save();
+        }
+
+        // Unset the previous owner's selected character if it's this character
+        if (is_object($sender) && $sender->settings->selected_character_id == $character->id) {
+            $sender->settings->update(['selected_character_id' => null]);
         }
 
         // Update character owner, sort order and cooldown

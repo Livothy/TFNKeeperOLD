@@ -69,6 +69,23 @@ class CharacterController extends Controller {
     }
 
     /**
+     * Sets the user's selected character.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postSelectCharacter(Request $request, CharacterManager $service) {
+        if ($service->selectCharacter($request->only(['character_id']), Auth::user())) {
+            flash('Selected character updated successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
      * Shows the user's transfers.
      *
      * @param string $type

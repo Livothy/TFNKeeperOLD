@@ -29,6 +29,15 @@
     {!! Form::hidden('sort', null, ['id' => 'sortableOrder']) !!}
     {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
     {!! Form::close() !!}
+
+    <h2>Selected Character</h2>
+    <p>Select one of your characters to feature on your profile.</p>
+    {!! Form::open(['url' => 'characters/select-character']) !!}
+    {!! Form::select('character_id', $characters->where('is_visible', 1)->pluck('fullName', 'id'), Auth::user()->settings->selected_character_id, ['class' => 'form-control mb-2', 'placeholder' => 'None']) !!}
+    <div class="text-right">
+        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    </div>
+    {!! Form::close() !!}
 @endsection
 @section('scripts')
     <script>
