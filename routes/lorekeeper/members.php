@@ -242,6 +242,14 @@ Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function () {
 /**************************************************************************************************
     Shops
 **************************************************************************************************/
+// FORMS & POLLS
+Route::group(['prefix' => 'forms'], function () {
+    Route::post('/send/{id}', 'SiteFormController@postSiteForm');
+    Route::get('/send/{id}', 'SiteFormController@editSiteForm');
+    Route::post('/like/{id}', 'SiteFormController@postLikeAnswer');
+    Route::post('/unlike/{id}', 'SiteFormController@postUnlikeAnswer');
+});
+
 Route::group(['prefix' => 'shops'], function () {
     Route::post('buy', 'ShopController@postBuy');
     Route::get('history', 'ShopController@getPurchaseHistory');

@@ -158,6 +158,13 @@ Route::group(['prefix' => __('raids.raids')], function () {
     Route::get(__('raids.bosses').'/{id}', 'RaidController@getBoss');
 });
 
+// FORMS & POLLS
+Route::group(['prefix' => 'forms'], function () {
+    Route::get('/', 'SiteFormController@getIndex');
+    Route::get('{id}.{slug?}', 'SiteFormController@getSiteForm');
+    Route::get('{id}.', 'SiteFormController@getSiteForm');
+});
+
 Route::group(['prefix' => 'prompts'], function () {
     Route::get('/', 'PromptsController@getIndex');
     Route::get('prompt-categories', 'PromptsController@getPromptCategories');

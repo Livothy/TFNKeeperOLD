@@ -260,6 +260,10 @@ return [
                 'url'  => 'admin/data/periodic-defaults',
             ],
             [
+                'name' => 'Forms & Polls',
+                'url'  => 'admin/forms',
+            ],
+            [
                 'name' => 'Random Generators',
                 'url'  => 'admin/data/random',
             ],

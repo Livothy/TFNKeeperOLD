@@ -10,6 +10,7 @@ use App\Models\News;
 use App\Models\Report\Report;
 use App\Models\Sales\Sales;
 use App\Models\SitePage;
+use App\Models\Forms\SiteForm;
 use App\Models\User\User;
 use App\Models\User\UserPage;
 use Illuminate\Http\Request;
@@ -143,6 +144,12 @@ class CommentController extends Controller {
                 $recipient = User::find(Settings::get('admin_user'));
                 $post = 'your site page';
                 $link = $page->url.'/#comment-'.$comment->getKey();
+                break;
+            case 'App\Models\Forms\SiteForm':
+                $form = SiteForm::find($comment->commentable_id);
+                $recipient = $form->user; // owner of the form post
+                $post = 'your form';
+                $link = $form->url.'/#comment-'.$comment->getKey();
                 break;
             case 'App\Models\Gallery\GallerySubmission':
                 $submission = GallerySubmission::find($comment->commentable_id);

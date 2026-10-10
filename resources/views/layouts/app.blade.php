@@ -130,6 +130,9 @@
                             @if (Auth::user()->is_sales_unread)
                                 <div class="alert alert-info"><a href="{{ url('sales') }}">There is a new sales post!</a></div>
                             @endif
+                            @if (Auth::user()->is_polls_unread)
+                                <div class="alert alert-info"><a href="{{ url('forms') }}">There is a new site poll!</a></div>
+                            @endif
                         @endif
                         @include('flash::message')
                         @yield('content')

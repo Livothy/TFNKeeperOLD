@@ -481,6 +481,19 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post(__('raids.raid').'-'.__('raids.bosses').'/{id}/image/delete/{imageId}', 'RaidController@postDeleteRaidBossImage');
 });
 
+// FORMS & POLLS
+Route::group(['prefix' => 'forms', 'middleware' => 'power:edit_pages'], function () {
+    Route::get('/', 'SiteFormController@getIndex');
+    Route::get('create', 'SiteFormController@getCreateSiteForm');
+    Route::get('edit/{id}', 'SiteFormController@getEditSiteForm');
+    Route::get('delete/{id}', 'SiteFormController@getDeleteSiteForm');
+    Route::post('create', 'SiteFormController@postCreateEditSiteForm');
+    Route::post('edit/{id?}', 'SiteFormController@postCreateEditSiteForm');
+    Route::post('delete/{id}', 'SiteFormController@postDeleteSiteForm');
+    Route::get('results/{id}', 'SiteFormController@getSiteFormResults');
+    Route::get('resultsbyresponse/{id}', 'SiteFormController@getSiteFormResultsAlt');
+});
+
 // PAGES
 Route::group(['prefix' => 'pages', 'middleware' => 'power:edit_pages'], function () {
     Route::get('/', 'PageController@getIndex');
