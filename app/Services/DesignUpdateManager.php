@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Facades\Notifications;
 use App\Models\Character\Character;
+use App\Models\Character\CharacterTitle;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterFeature;
 use App\Models\Character\CharacterImage;
@@ -417,6 +418,12 @@ class DesignUpdateManager extends Service {
             $request->species_id = $species->id;
             $request->rarity_id = $rarity->id;
             $request->subtype_id = $subtype ? $subtype->id : null;
+            // Character Titles
+            if (!empty($data['title_id']) && $data['title_id'] != 'custom' && !CharacterTitle::find($data['title_id'])) {
+                throw new \Exception('Invalid title selected.');
+            }
+            $request->title_id = !empty($data['title_id']) && $data['title_id'] != 'custom' ? $data['title_id'] : null;
+            $request->title_data = !empty($data['title_id']) && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
             $request->has_features = 1;
             $request->save();
 
@@ -576,6 +583,8 @@ class DesignUpdateManager extends Service {
                 'species_id'         => $request->species_id,
                 'subtype_id'         => ($request->character->is_myo_slot && isset($request->character->image->subtype_id)) ? $request->character->image->subtype_id : $request->subtype_id,
                 'rarity_id'          => $request->rarity_id,
+                'title_id'           => $request->title_id ?: null,
+                'title_data'         => $request->title_data ? json_encode($request->title_data) : null,
                 'sort'               => 0,
             ]);
 

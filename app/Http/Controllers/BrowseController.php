@@ -15,6 +15,7 @@ use App\Models\Feature\Feature;
 use App\Models\Marking\Marking;
 use App\Models\Rank\Rank;
 use App\Models\Rarity;
+use App\Models\Character\CharacterTitle;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
@@ -257,6 +258,15 @@ class BrowseController extends Controller {
                 });
             }
         }
+
+        if($request->get('title_id')) {
+            if($request->get('title_id') == 'custom') $imageQuery->whereNull('title_id')->whereNotNull('title_data');
+            else $imageQuery->where('title_id', $request->get('title_id'));
+        }
+        if($request->get('title_id') == 'custom' && $request->get('title_data')) {
+            $imageQuery->where('title_data','LIKE', '%'.$request->get('title_data').'%');
+        }
+
         if ($request->get('artist')) {
             $artist = User::find($request->get('artist'));
             if ($artist) {
@@ -361,6 +371,7 @@ class BrowseController extends Controller {
             'bases'        => ['' => 'Select Base(s)'] + Base::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
             'sublists'     => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'titles' => [0 => 'Any Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('character_titles.sort', 'DESC')->pluck('title', 'id')->toArray(),
         ]);
     }
 
@@ -631,6 +642,15 @@ class BrowseController extends Controller {
                 });
             }
         }
+
+        if($request->get('title_id')) {
+            if($request->get('title_id') == 'custom') $imageQuery->whereNull('title_id')->whereNotNull('title_data');
+            else $imageQuery->where('title_id', $request->get('title_id'));
+        }
+        if($request->get('title_id') == 'custom' && $request->get('title_data')) {
+            $imageQuery->where('title_data','LIKE', '%'.$request->get('title_data').'%');
+        }
+
         if ($request->get('artist')) {
             $artist = User::find($request->get('artist'));
             if ($artist) {
@@ -777,6 +797,7 @@ class BrowseController extends Controller {
             'sublists'        => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions'     => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
             'randomcharacter' => $randomcharacter,
+            'titles' => [0 => 'Any Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('character_titles.sort', 'DESC')->pluck('title', 'id')->toArray(),
         ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Characters;
 use App\Http\Controllers\Controller;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterDesignUpdate;
+use App\Models\Character\CharacterTitle;
 use App\Models\Feature\Feature;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
@@ -226,6 +227,7 @@ class DesignController extends Controller {
             'subtypes'  => ['0' => 'No Subtype'] + Subtype::visible()->where('species_id', '=', $r->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'rarities'  => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'features'  => Feature::getDropdownItems(),
+            'titles' => ['0' => 'Select Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
         ]);
     }
 

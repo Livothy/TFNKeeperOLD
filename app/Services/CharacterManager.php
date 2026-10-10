@@ -15,6 +15,9 @@ use App\Models\Character\CharacterMarking;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Marking\Marking;
 use App\Models\Sales\SalesCharacter;
+use App\Models\User\UserCharacterLog;
+use App\Models\Character\CharacterTitle;
+use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
 use App\Models\WorldExpansion\FactionRankMember;
@@ -647,6 +650,7 @@ class CharacterManager extends Service {
             $old['species'] = $image->species_id ? $image->species->displayName : null;
             $old['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
             $old['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
+            $old['title'] = $image->title_id ? CharacterTitle::find($image->title_id)?->displayName : ($image->title_data ? $image->title_data : null);
 
             // Clear old features
             $image->features()->delete();
@@ -662,6 +666,8 @@ class CharacterManager extends Service {
             $image->species_id = $data['species_id'];
             $image->subtype_id = $data['subtype_id'] ?: null;
             $image->rarity_id = $data['rarity_id'];
+            $image->title_id = !empty($data['title_id']) && $data['title_id'] != 'custom' ? $data['title_id'] : null;
+            $image->title_data = !empty($data['title_id']) && !empty(array_filter($data['title_data'] ?? [])) ? json_encode($data['title_data']) : null;
             $image->save();
 
             $new = [];
@@ -669,6 +675,7 @@ class CharacterManager extends Service {
             $new['species'] = $image->species_id ? $image->species->displayName : null;
             $new['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
             $new['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
+            $new['title'] = $image->title_id ? CharacterTitle::find($image->title_id)?->displayName : ($image->title_data ? $image->title_data : null);
 
             // Character also keeps track of these features
             $image->character->rarity_id = $image->rarity_id;
@@ -2084,6 +2091,9 @@ class CharacterManager extends Service {
             $imageData['extension'] = (config('lorekeeper.settings.masterlist_image_format') ?? ($data['extension'] ?? $data['image']->getClientOriginalExtension()));
             $imageData['fullsize_extension'] = (config('lorekeeper.settings.masterlist_fullsizes_format') ?? ($data['fullsize_extension'] ?? $data['image']->getClientOriginalExtension()));
             $imageData['character_id'] = $character->id;
+            // Character Titles: a picked title, or a custom one stored in title_data
+            $imageData['title_id'] = !empty($data['title_id']) && $data['title_id'] != 'custom' ? $data['title_id'] : null;
+            $imageData['title_data'] = !empty($data['title_id']) && !empty(array_filter($data['title_data'] ?? [])) ? json_encode($data['title_data']) : null;
 
             $image = CharacterImage::create($imageData);
 

@@ -99,6 +99,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('character_likes_leaderboard_enable', 1, '0: Disable leaderboard, 1: Enable leaderboard.');
 
+        $this->addSiteSetting('character_title_display', 0, '0: Character titles only show in image info. 1: Titles also show alongside category, species and rarity.');
+
         $this->line("\nSite settings up to date!");
     }
 

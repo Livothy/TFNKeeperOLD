@@ -7,6 +7,13 @@ use App\Models\Base\Base;
 use App\Models\Carrier\Carrier;
 use App\Models\Award\Award;
 use App\Models\Award\AwardLog;
+use Config;
+use DB;
+
+use App\Models\Character\CharacterCategory;
+use App\Models\Character\CharacterTransfer;
+use App\Models\Character\CharacterBookmark;
+use App\Models\Character\CharacterCurrency;
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\Gallery\GalleryCharacter;
@@ -987,7 +994,7 @@ class Character extends Model {
      * @return array
      */
     public function getBaseCoat() {
-        if (str_contains($this->base, '|')) {
+        if (str_contains($this->base ?? '', '|')) {
             $chimera_bases = [];
             $bases = explode('|', $this->base);
             if (count($bases) > 1) {

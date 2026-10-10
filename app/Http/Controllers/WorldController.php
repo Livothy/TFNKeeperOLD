@@ -14,6 +14,10 @@ use App\Models\Rarity;
 use App\Models\Shop\Shop;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
+use App\Models\Character\CharacterTitle;
+use App\Models\Prompt\PromptCategory;
+use App\Models\Prompt\Prompt;
+use App\Models\Shop\ShopStock;
 use App\Models\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -533,6 +537,28 @@ class WorldController extends Controller {
 
         return view('world.character_categories', [
             'categories' => $query->visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
+     * Shows the character titles page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterTitles(Request $request) {
+        $query = CharacterTitle::query();
+        $title = $request->get('title');
+        $rarity = $request->get('rarity_id');
+        if ($title) {
+            $query->where('title', 'LIKE', '%'.$title.'%');
+        }
+        if (isset($rarity) && $rarity != 'none') {
+            $query->where('rarity_id', $rarity);
+        }
+
+        return view('world.character_titles', [
+            'titles'   => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
+            'rarities' => ['none' => 'Any Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 }

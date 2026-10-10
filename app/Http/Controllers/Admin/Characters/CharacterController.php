@@ -12,6 +12,7 @@ use App\Models\Character\CharacterTransfer;
 use App\Models\Feature\Feature;
 use App\Models\Marking\Marking;
 use App\Models\Rarity;
+use App\Models\Character\CharacterTitle;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\Trade;
@@ -59,6 +60,7 @@ class CharacterController extends Controller {
             'subtypes'    => ['0' => 'Pick a Species First'],
             'features'    => Feature::getDropdownItems(1),
             'isMyo'       => false,
+            'titles' => ['0' => 'Select Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
         ]);
     }
 
@@ -113,6 +115,8 @@ class CharacterController extends Controller {
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'marking_id', 'is_dominant', 'base', 'secondary_base', 'side_id',
             'marking_color_0', 'marking_color_1', 'is_chimera',
             'image', 'thumbnail', 'image_description',
+            'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'title_id', 'title_data',
+            'image', 'thumbnail', 'image_description'
         ]);
 
         if ($character = $service->createCharacter($data, Auth::user())) {

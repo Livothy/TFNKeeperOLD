@@ -7,6 +7,7 @@ use App\Models\Character\Character;
 use App\Models\Character\CharacterImage;
 use App\Models\Feature\Feature;
 use App\Models\Rarity;
+use App\Models\Character\CharacterTitle;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
@@ -104,6 +105,7 @@ class CharacterImageController extends Controller {
         return view('character.admin._edit_features_modal', [
             'image'     => $image,
             'rarities'  => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'titles' => ['0' => 'Select Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'  => ['0' => 'Select Subtype'] + Subtype::where('species_id', '=', $image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'features'  => Feature::getDropdownItems(1),
@@ -119,7 +121,7 @@ class CharacterImageController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditImageFeatures(Request $request, CharacterManager $service, $id) {
-        $data = $request->only(['species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data']);
+        $data = $request->only(['species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'title_id', 'title_data']);
         $image = CharacterImage::find($id);
         if (!$image) {
             abort(404);

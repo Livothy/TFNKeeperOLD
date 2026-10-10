@@ -24,6 +24,14 @@
                     {!! Form::label('subtype_id', 'Species Subtype: ') !!}
                     {!! Form::select('subtype_id', $subtypes, Request::get('subtype_id'), ['class' => 'form-control mr-2', 'style' => 'width: 250px']) !!}
                 </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('title_id', 'Title: ') !!}
+                    {!! Form::select('title_id', $titles, Request::get('title_id'), ['class' => 'form-control mr-2', 'id' => 'customTitle', 'style' => 'width: 250px']) !!}
+                </div>
+                <div class="masterlist-search-field" id="customTitleOptions">
+                    {!! Form::label('title_data', 'Custom Title: ') !!}
+                    {!! Form::text('title_data', Request::get('title_data'), ['class' => 'form-control mr-2', 'style' => 'width: 250px']) !!}
+                </div>
                 <hr />
             @endif
             <div class="masterlist-search-field">
@@ -226,6 +234,9 @@
                     </td>
                     <td>{!! $character->image->rarity_id ? $character->image->rarity->displayName : 'None' !!}</td>
                     <td>{!! $character->image->species_id ? $character->image->species->displayName : 'None' !!}</td>
+                    @if(Settings::get('character_title_display'))
+                        <td>{!! $character->image->hasTitle ? ($character->image->title_id ? $character->image->title->displayNameShort : (isset($character->image->title_data['short']) ? nl2br(htmlentities($character->image->title_data['short'])) : nl2br(htmlentities($character->image->title_data['full'])))) : 'None' !!}</td>
+                    @endif
                     <td>{!! format_date($character->created_at) !!}</td>
                 </tr>
             @endforeach
