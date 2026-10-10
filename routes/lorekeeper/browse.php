@@ -133,6 +133,11 @@ Route::group(['prefix' => 'world'], function () {
     Route::get('character-titles', 'WorldController@getCharacterTitles');
 
     Route::get(__('transformations.transformations'), 'WorldController@getTransformations');
+
+    Route::get(__('volumes.library'), 'WorldController@getLibrary');
+    Route::get(__('volumes.library').'/'.__('volumes.volume').'/{id}', 'WorldController@getVolume');
+    Route::get(__('volumes.library').'/'.__('volumes.book').'/{id}', 'WorldController@getBook');
+    Route::get(__('volumes.library').'/'.__('volumes.volumes'), 'WorldController@getVolumes');
 });
 
 // RAIDS

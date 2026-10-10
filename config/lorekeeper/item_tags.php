@@ -36,4 +36,16 @@ return [
         'text_color' => 'antiquewhite',
         'background_color' => 'slategrey'
     ],
+
+    'volume' => [
+        'name'             => 'Volume',
+        'text_color'       => '#ffffff',
+        'background_color' => '#1fd1a7',
+    ],
+
+    'book' => [
+        'name'             => 'Book',
+        'text_color'       => '#ffffff',
+        'background_color' => '#1fd1a7',
+    ],
 ];

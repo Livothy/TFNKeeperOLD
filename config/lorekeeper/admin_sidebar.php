@@ -240,6 +240,10 @@ return [
                 'url'  => 'admin/data/items',
             ],
             [
+                'name' => 'Library',
+                'url'  => 'admin/data/volumes',
+            ],
+            [
                 'name' => 'Random Generators',
                 'url'  => 'admin/data/random',
             ],

@@ -372,6 +372,36 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('criteria-defaults/edit/{id}', 'CriterionController@postCreateEditCriterionDefault');
     Route::get('criteria-defaults/delete/{id}', 'CriterionController@getDeleteCriterionDefault');
     Route::post('criteria-defaults/delete/{id}', 'CriterionController@postDeleteCriterionDefault');
+
+    // VOLUMES
+    Route::get('volumes', 'VolumeController@getVolumeIndex');
+    Route::get('volumes/create', 'VolumeController@getCreateVolume');
+    Route::get('volumes/edit/{id}', 'VolumeController@getEditVolume');
+    Route::get('volumes/delete/{id}', 'VolumeController@getDeleteVolume');
+    Route::post('volumes/create', 'VolumeController@postCreateEditVolume');
+    Route::post('volumes/edit/{id?}', 'VolumeController@postCreateEditVolume');
+    Route::post('volumes/delete/{id}', 'VolumeController@postDeleteVolume');
+
+    // BOOKS
+    Route::get('volumes/books', 'VolumeController@getBookIndex');
+    Route::get('volumes/books/create', 'VolumeController@getCreateBook');
+    Route::get('volumes/books/edit/{id}', 'VolumeController@getEditBook');
+    Route::get('volumes/books/delete/{id}', 'VolumeController@getDeleteBook');
+    Route::post('volumes/books/create', 'VolumeController@postCreateEditBook');
+    Route::post('volumes/books/edit/{id?}', 'VolumeController@postCreateEditBook');
+    Route::post('volumes/books/delete/{id}', 'VolumeController@postDeleteBook');
+    Route::post('volumes/books/sort/{id}', 'VolumeController@postSortVolumes');
+    Route::post('volumes/books/authors/{id}', 'VolumeController@postEditAuthors');
+
+    Route::get('volumes/bookshelves', 'VolumeController@getBookshelfIndex');
+    Route::get('volumes/bookshelves/create', 'VolumeController@getCreateBookshelf');
+    Route::get('volumes/bookshelves/edit/{id}', 'VolumeController@getEditBookshelf');
+    Route::get('volumes/bookshelves/delete/{id}', 'VolumeController@getDeleteBookshelf');
+    Route::post('volumes/bookshelves/create', 'VolumeController@postCreateEditBookshelf');
+    Route::post('volumes/bookshelves/edit/{id?}', 'VolumeController@postCreateEditBookshelf');
+    Route::post('volumes/bookshelves/delete/{id}', 'VolumeController@postDeleteBookshelf');
+    Route::post('volumes/bookshelves/books/{id}', 'VolumeController@postSortBooks');
+    Route::post('volumes/bookshelves/sort', 'VolumeController@postSortBookshelves');
 });
 
 // RAIDS

@@ -19,6 +19,10 @@ use App\Models\Prompt\PromptCategory;
 use App\Models\Prompt\Prompt;
 use App\Models\Shop\ShopStock;
 use App\Models\User\User;
+use App\Models\Volume\Book;
+use App\Models\Volume\Bookshelf;
+use App\Models\Volume\BookTag;
+use App\Models\Volume\Volume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Character\CharacterTransformation as Transformation;
@@ -577,6 +581,148 @@ class WorldController extends Controller {
 
         return view('world.transformations', [
             'transformations' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
+     * Shows the volumes page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getVolumes(Request $request)
+    {
+        $query = Volume::visible(Auth::user() ?? null);
+        $data = $request->only(['name', 'sort', 'book_id']);
+        if (isset($data['name'])) {
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
+        }
+
+        if (isset($data['book_id']) && $data['book_id'] != 'none') {
+            $query->where('book_id', $data['book_id']);
+        }
+
+        if (isset($data['sort'])) {
+            switch ($data['sort']) {
+                case 'alpha':
+                    $query->sortAlphabetical();
+                    break;
+                case 'alpha-reverse':
+                    $query->sortAlphabetical(true);
+                    break;
+                case 'newest':
+                    $query->sortNewest();
+                    break;
+                case 'oldest':
+                    $query->sortOldest();
+                    break;
+            }
+        } else {
+            $query->sortNewest();
+        }
+
+        return view('world.volumes.volumes', [
+            'volumes' => $query->paginate(20)->appends($request->query()),
+            'books' => ['none' => 'Any Book'] + Book::visible(Auth::user() ?? null)->orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
+        ]);
+    }
+
+    /**
+     * Shows an individual volume's page.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getVolume($id)
+    {
+        $volume = Volume::visible(Auth::user() ?? null)->where('id', $id)->first();
+        if (!$volume) {
+            abort(404);
+        }
+
+        return view('world.volumes._volume_page', [
+            'volume' => $volume,
+        ]);
+    }
+
+    /**
+     * Shows the library page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getLibrary(Request $request)
+    {
+        $bookshelves = Bookshelf::orderBy('sort', 'DESC')->get();
+        $query = Book::visible(Auth::user() ?? null);
+        $data = $request->only(['name', 'sort', 'bookshelf_id', 'tags']);
+        if (isset($data['name'])) {
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
+        }
+
+        if (isset($data['bookshelf_id']) && $data['bookshelf_id'] != 'none') {
+            $query->where('bookshelf_id', $data['bookshelf_id']);
+        }
+
+        if ($request->get('tags')) {
+            foreach ($request->get('tags') as $tag) {
+                $query->whereIn('id', BookTag::where('tag', $tag)->pluck('book_id')->toArray());
+            }
+        }
+
+        if (isset($data['sort'])) {
+            switch ($data['sort']) {
+                case 'alpha':
+                    $query->sortAlphabetical();
+                    break;
+                case 'alpha-reverse':
+                    $query->sortAlphabetical(true);
+                    break;
+                case 'newest':
+                    $query->sortNewest();
+                    break;
+                case 'oldest':
+                    $query->sortOldest();
+                    break;
+            }
+        } else {
+            $query->sortAlphabetical();
+        }
+
+        $books = count($bookshelves) ? $query->orderByRaw('FIELD(bookshelf_id,' . implode(',', $bookshelves->pluck('id')->toArray()) . ')')->orderBy('name')->get()->groupBy('bookshelf_id') : $query->orderBy('name')->get()->groupBy('bookshelf_id');
+
+        //get all the tags
+        $tags = BookTag::pluck('tag')->unique();
+
+        if (isset($tags) && count($tags)) {
+            foreach ($tags as $tag) {
+                $taglist[$tag] = $tag;
+            }
+        }
+
+        return view('world.volumes.library', [
+            'books' => $books->paginate(24)->appends($request->query()),
+            'bookshelves' => $bookshelves->keyBy('id'),
+            'bookshelfOptions' => ['none' => 'Any Bookshelf'] + Bookshelf::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'tags'            => $taglist ?? [],
+        ]);
+    }
+
+    /**
+     * Shows an individual book's page.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getBook($id)
+    {
+        $book = Book::visible(Auth::user() ?? null)->where('id', $id)->first();
+        if (!$book) {
+            abort(404);
+        }
+
+        return view('world.volumes._book_page', [
+            'book' => $book,
         ]);
     }
 }
