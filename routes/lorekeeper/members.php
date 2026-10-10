@@ -366,3 +366,7 @@ Route::group(['prefix' => 'higher-or-lower'], function() {
     Route::get('play', 'HolController@playHol');
     Route::post('play/guess', 'HolController@postGuess');
 });
+
+Route::group(['prefix' => 'event-tracking'], function () {
+    Route::post('team/{id}', 'EventController@postJoinTeam')->where('id', '[0-9]+');
+});

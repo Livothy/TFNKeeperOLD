@@ -13,7 +13,7 @@ class UserSettings extends Model {
     protected $fillable = [
         'is_fto', 'submission_count', 'banned_at', 'ban_reason', 'birthday_setting',
         'deactivate_reason', 'deactivated_at',
-        'allow_character_likes', 'border_settings', 'hol_plays', 'selected_character_id',
+        'allow_character_likes', 'border_settings', 'hol_plays', 'selected_character_id', 'team_id',
     ];
 
     /**
@@ -59,5 +59,12 @@ class UserSettings extends Model {
      */
     public function selectedCharacter() {
         return $this->belongsTo('App\Models\Character\Character', 'selected_character_id')->visible()->where('user_id', $this->user_id);
+    }
+
+    /**
+     * Get the event team the user has joined.
+     */
+    public function team() {
+        return $this->belongsTo('App\Models\EventTeam', 'team_id');
     }
 }

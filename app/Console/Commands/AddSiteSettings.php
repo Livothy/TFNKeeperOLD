@@ -111,6 +111,12 @@ class AddSiteSettings extends Command {
         $this->addSiteSetting('site_weather', 0, 'Weather: ID of the weather the site currently has.');
         $this->addSiteSetting('site_weather_cycle', 0, 'Weather: how often the weather is re-rolled from the season. 0 = never, 1 = daily, 2 = weekly (Mondays), 3 = monthly (the 1st).');
 
+        $this->addSiteSetting('event_currency', 0, 'Event Tools: ID of the event currency. 0 = no event.');
+        $this->addSiteSetting('event_global_score', 0, 'Event Tools: 1 = also keep a global tally of event currency earned (stored on the admin_user account).');
+        $this->addSiteSetting('event_global_goal', 0, 'Event Tools: goal for the global tally. 0 = no goal.');
+        $this->addSiteSetting('event_teams', 0, 'Event Tools: 1 = teams are open; event currency earned adds to the player\'s team score.');
+        $this->addSiteSetting('event_weighting', 0, 'Event Tools: 1 = team scores are divided by member count.');
+
         $this->line("\nSite settings up to date!");
     }
 

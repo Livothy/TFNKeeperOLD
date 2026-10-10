@@ -37,4 +37,8 @@ return [
         'text'  => 'This page contains the end of the Design Hub page.',
     ],
 
+    'event-tracker' => [
+        'title' => 'Event Tracker',
+        'text'  => 'Information about the current event, shown above the global score on the event tracking page.',
+    ],
 ];

@@ -275,6 +275,7 @@ class CurrencyManager extends Service {
                 } else {
                     $record = UserCurrency::create(['user_id' => $recipient->id, 'currency_id' => $currency->id, 'quantity' => $quantity]);
                 }
+                EventService::trackEventCurrency($recipient, $currency, $quantity);
             } else {
                 $record = CharacterCurrency::where('character_id', $recipient->id)->where('currency_id', $currency->id)->first();
                 if ($record) {

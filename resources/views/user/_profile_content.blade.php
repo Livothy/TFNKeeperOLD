@@ -125,6 +125,17 @@
     </div>
 @endif
 
+@if (Settings::get('event_teams') && $user->settings->team)
+    <div class="text-center mb-3">
+        <a href="{{ url('event-tracking') }}">
+            @if ($user->settings->team->has_image)
+                <img src="{{ $user->settings->team->imageUrl }}" class="mw-100" alt="{{ $user->settings->team->name }}" />
+            @endif
+            <h5>{{ $user->settings->team->name }}</h5>
+        </a>
+    </div>
+@endif
+
 @if ($user->settings->selectedCharacter)
     <div class="row justify-content-center" style="clear:both;">
         <div class="col-md-6">

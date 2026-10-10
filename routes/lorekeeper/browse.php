@@ -309,3 +309,7 @@ Route::group(['prefix' => 'world', 'namespace' => 'WorldExpansion'], function ()
     Route::get('concept-categories', 'ConceptController@getConceptCategories');
     Route::get('concept-categories/{id}', 'ConceptController@getConceptCategory');
 });
+
+Route::group(['prefix' => 'event-tracking'], function () {
+    Route::get('/', 'EventController@getEventTracking');
+});

@@ -268,6 +268,10 @@ return [
                 'url'  => 'admin/weather/weathers',
             ],
             [
+                'name' => 'Event Settings',
+                'url'  => 'admin/event-settings',
+            ],
+            [
                 'name' => 'Forms & Polls',
                 'url'  => 'admin/forms',
             ],

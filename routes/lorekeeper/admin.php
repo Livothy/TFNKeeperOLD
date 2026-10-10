@@ -897,3 +897,11 @@ Route::group(['prefix' => 'weather', 'namespace' => 'Data', 'middleware' => 'pow
     Route::post('weathers/edit/{id}', 'WeatherController@postCreateEditWeather');
     Route::post('weathers/delete/{id}', 'WeatherController@postDeleteWeather');
 });
+
+// EVENT SETTINGS
+Route::group(['prefix' => 'event-settings', 'middleware' => 'power:edit_inventories'], function () {
+    Route::get('/', 'EventController@getEventSettings');
+    Route::get('clear', 'EventController@getClearEventCurrency');
+    Route::post('clear', 'EventController@postClearEventCurrency');
+    Route::post('teams', 'EventController@postEventTeams');
+});
