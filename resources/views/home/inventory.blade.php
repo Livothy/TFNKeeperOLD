@@ -12,6 +12,7 @@
         <div class="float-right mb-3">
             <a class="btn btn-secondary consolidate-inventory" href="#">Consolidate</a>
             <a class="btn btn-primary" href="{{ url('inventory/account-search') }}"><i class="fas fa-search"></i> Account Search</a>
+            <a class="btn btn-primary" href="{{ url(__('safetydeposit.url')) }}"><i class="fas fa-boxes"></i> {{ ucwords(__('safetydeposit.name')) }}</a>
             <a class="btn btn-primary" href="{{ url('inventory/full-inventory') }}"><i class="fas fa-warehouse"></i> Full Inventory</a>
         </div>
     </h1>

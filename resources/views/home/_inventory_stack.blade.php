@@ -136,6 +136,22 @@
                     </div>
                 </li>
                 <li class="list-group-item">
+                    <a class="card-title h5 collapse-title" data-toggle="collapse" href="#depositForm">
+                        @if ($stack->first()->user_id != $user->id)
+                            [ADMIN]
+                        @endif Deposit Item
+                    </a>
+                    <div id="depositForm" class="collapse">
+                        <p>
+                            This item will be moved into your <a href="{{ url(__('safetydeposit.url')) }}" target="_blank">{{ ucwords(__('safetydeposit.name')) }}</a> for later. <br />
+                            It can't be used in trades, submissions, etc. until you move it back into your inventory.
+                        </p>
+                        <div class="text-right">
+                            {!! Form::button('Deposit', ['class' => 'btn btn-primary', 'name' => 'action', 'value' => 'deposit', 'type' => 'submit']) !!}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
                     <a class="card-title h5 collapse-title" data-toggle="collapse" href="#deleteForm">
                         @if ($stack->first()->user_id != $user->id)
                             [ADMIN]

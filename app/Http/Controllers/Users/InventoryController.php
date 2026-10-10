@@ -13,6 +13,7 @@ use App\Models\Trade;
 use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Services\InventoryManager;
+use App\Services\StorageManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -140,6 +141,9 @@ class InventoryController extends Controller {
                     break;
                 case 'resell':
                     return $this->postResell($request, $service);
+                    break;
+                case 'deposit':
+                    return $this->postDeposit($request, new StorageManager);
                     break;
                 case 'act':
                     return $this->postAct($request);
@@ -377,6 +381,27 @@ class InventoryController extends Controller {
             flash('Invalid action selected.')->error();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Safety Deposit Box: deposits inventory stacks into storage.
+     *
+     * @param \App\Services\StorageManager $service
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function postDeposit(Request $request, StorageManager $service) {
+        $stacks = UserItem::find($request->get('ids'));
+        $owner = $stacks->count() ? User::find($stacks->first()->user_id) : null;
+        if ($owner && $service->depositStack($owner, $stacks, $request->get('quantities'))) {
+            flash('Item deposited successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] ?? ['Invalid item selected.'] as $error) {
                 flash($error)->error();
             }
         }
