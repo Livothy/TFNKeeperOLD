@@ -333,4 +333,26 @@ class Prompt extends Model {
     public function getAdminPowerAttribute() {
         return 'edit_data';
     }
+
+    /**
+     * Periodic Rewards: user rewards attached to this prompt.
+     */
+    public function periodicRewards() {
+        return $this->hasMany('App\Models\PeriodicReward', 'object_id')->where([
+            ['object_type', class_basename($this)],
+            ['recipient_type', 'User'],
+            ['reward_key', 'periodicRewards'],
+        ]);
+    }
+
+    /**
+     * Periodic Rewards: character rewards attached to this prompt.
+     */
+    public function periodicCharacterRewards() {
+        return $this->hasMany('App\Models\PeriodicReward', 'object_id')->where([
+            ['object_type', class_basename($this)],
+            ['recipient_type', 'Character'],
+            ['reward_key', 'periodicCharacterRewards'],
+        ]);
+    }
 }

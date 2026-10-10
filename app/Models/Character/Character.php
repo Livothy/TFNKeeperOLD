@@ -1041,4 +1041,17 @@ class Character extends Model {
             return $this->profile->like_count;
         }
     }
+
+    /**
+     * Periodic Rewards: the character's approved submissions for a prompt.
+     *
+     * @param int $prompt_id
+     * @param int $character_id
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function approvedSubmissions($prompt_id, $character_id) {
+        return \App\Models\Submission\Submission::where('status', 'Approved')->where('prompt_id', $prompt_id)
+            ->whereIn('id', \App\Models\Submission\SubmissionCharacter::where('character_id', $character_id)->pluck('submission_id')->toArray());
+    }
 }

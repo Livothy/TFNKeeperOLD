@@ -174,6 +174,24 @@
 
     {!! Form::close() !!}
 
+    @include('widgets._periodic_loot_select', [
+        'object' => $prompt,
+        'action' => 'submission',
+        'objectname' => 'prompt',
+        'recipient' => 'User',
+        'reward_key' => 'periodicRewards',
+    ])
+
+    @include('widgets._periodic_loot_select', [
+        'object' => $prompt,
+        'action' => 'submission',
+        'objectname' => 'prompt',
+        'recipient' => 'Character',
+        'showHr' => true,
+        'reward_key' => 'periodicCharacterRewards',
+        'info' => '<p>Character rewards are only credited to the focus characters of a submission, both users and moderators can add and edit this status. There can be multiple focus characters.</p>',
+    ])
+
     <div id="copy-calc" class="card p-3 mb-2 pl-0 hide">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <a class="col-1 p-0" data-toggle="collapse" href="#collapsable-">

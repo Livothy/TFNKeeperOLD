@@ -24,6 +24,10 @@
                         {!! Form::label('slug[]', 'Character Code') !!}
                         {!! Form::select('slug[]', $characters, null, ['class' => 'form-control character-code', 'placeholder' => 'Select Character']) !!}
                     </div>
+                    <div class="form-group">
+                        {!! Form::label('character-is-focus[]', 'Focus Character?', ['class' => 'mr-2']) !!}
+                        {!! Form::select('character-is-focus[]', [0 => 'No', 1 => 'Yes'], 0, ['class' => 'form-control character-is-focus']) !!}
+                    </div>
                     <div class="character-rewards hide">
                         <h4>Character Rewards</h4>
                         <table class="table table-sm">

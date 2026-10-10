@@ -256,6 +256,10 @@ return [
                 'url'  => 'admin/data/referrals',
             ],
             [
+                'name' => 'Periodic Reward Defaults',
+                'url'  => 'admin/data/periodic-defaults',
+            ],
+            [
                 'name' => 'Random Generators',
                 'url'  => 'admin/data/random',
             ],

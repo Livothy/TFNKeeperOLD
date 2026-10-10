@@ -124,6 +124,33 @@
     </div>
 @endif
 
+@if (isset($submission->data['periodicrewards']) && array_filter(parseAssetData($submission->data['periodicrewards'])))
+    <div class="card mb-3">
+        <div class="card-header h2">Bonus Rewards</div>
+        <div class="card-body">
+            <p>Received for submitting to this prompt a certain number of times.</p>
+            <table class="table table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="70%">Reward</th>
+                        <th width="30%">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (parseAssetData($submission->data['periodicrewards']) as $type)
+                        @foreach ($type as $asset)
+                            <tr>
+                                <td>{!! $asset['asset'] ? $asset['asset']->displayName : 'Deleted Asset' !!}</td>
+                                <td>{{ $asset['quantity'] }}</td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endif
+
 <div class="card mb-3">
     <div class="card-header h2">Characters</div>
     <div class="card-body">
@@ -141,7 +168,11 @@
                 <div class="submission-character-info card ml-2">
                     <div class="card-body">
                         <div class="submission-character-info-content">
-                            <h3 class="mb-2 submission-character-info-header"><a href="{{ $character->character->url }}">{{ $character->character->fullName }}</a></h3>
+                            <h3 class="mb-2 submission-character-info-header"><a href="{{ $character->character->url }}">{{ $character->character->fullName }}</a>
+                                @if ($character->is_focus)
+                                    <i class="fas fa-bullseye float-right mr-2" data-toggle="tooltip" data-placement="top" title="This character is the focus of the submission!"></i>
+                                @endif
+                            </h3>
                             <div class="submission-character-info-body">
                                 @if (array_filter(parseAssetData($character->data)))
                                     <table class="table table-sm mb-0">
@@ -184,6 +215,21 @@
                                     <p>
                                         No rewards set.
                                     </p>
+                                @endif
+                                @if ($character->periodic_data && array_filter(parseAssetData($character->periodic_data)))
+                                    <h5 class="mt-3">Bonus Rewards</h5>
+                                    <table class="table table-sm mb-0">
+                                        <tbody>
+                                            @foreach (parseAssetData($character->periodic_data) as $key => $type)
+                                                @foreach ($type as $asset)
+                                                    <tr>
+                                                        <td width="70%">{!! $asset['asset'] ? $asset['asset']->displayName : 'Deleted Asset' !!} ({!! ucfirst($key) !!})</td>
+                                                        <td width="30%">{{ $asset['quantity'] }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 @endif
                             </div>
                         </div>

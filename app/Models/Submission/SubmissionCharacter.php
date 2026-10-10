@@ -12,7 +12,7 @@ class SubmissionCharacter extends Model {
      * @var array
      */
     protected $fillable = [
-        'submission_id', 'character_id', 'data',
+        'submission_id', 'character_id', 'data', 'is_focus', 'periodic_data',
     ];
 
     /**
@@ -77,5 +77,14 @@ class SubmissionCharacter extends Model {
         }
 
         return $rewards;
+    }
+
+    /**
+     * Periodic Rewards: bonus rewards granted to this character.
+     *
+     * @return array|null
+     */
+    public function getPeriodicDataAttribute() {
+        return isset($this->attributes['periodic_data']) ? json_decode($this->attributes['periodic_data'], true) : null;
     }
 }

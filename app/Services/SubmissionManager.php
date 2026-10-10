@@ -490,6 +490,7 @@ class SubmissionManager extends Service {
                     'character_id'  => $c->id,
                     'submission_id' => $submission->id,
                     'data'          => json_encode(getDataReadyAssets($assets)),
+                    'is_focus'      => !empty($data['character_is_focus'][$c->id]) ? 1 : 0,
                 ]);
             }
 
@@ -521,6 +522,11 @@ class SubmissionManager extends Service {
                     'criterion' => $data['criterion'] ?? null,
                 ]), // list of rewards
             ]);
+
+            // Periodic Rewards: bonus rewards for the Nth approved submission to this prompt
+            if ($submission->prompt_id) {
+                $this->grantPeriodicRewards($submission, $user, $promptLogType, $promptData);
+            }
 
             Notifications::create($submission->prompt_id ? 'SUBMISSION_APPROVED' : 'CLAIM_APPROVED', $submission->user, [
                 'staff_url'     => $user->url,
@@ -838,6 +844,7 @@ class SubmissionManager extends Service {
                 'character_id'  => $c->id,
                 'submission_id' => $submission->id,
                 'data'          => json_encode(getDataReadyAssets($assets)),
+                'is_focus'      => !empty($data['character_is_focus'][$c->id]) ? 1 : 0,
             ]);
         }
 
@@ -878,6 +885,47 @@ class SubmissionManager extends Service {
                 }
                 if (!$currencyManager->creditCurrency(null, $submission->user, null, null, $currency, $quantity)) {
                     throw new \Exception('Could not return currency to user. ('.$currencyId.')');
+                }
+            }
+        }
+    }
+
+    /**
+     * Periodic Rewards: grants prompt periodic rewards to the submitter and focus characters
+     * of an approved submission and records them on the submission.
+     *
+     * @param \App\Models\Submission\Submission $submission
+     * @param \App\Models\User\User             $user          approving staff member
+     * @param string                            $promptLogType
+     * @param array                             $promptData
+     */
+    private function grantPeriodicRewards($submission, $user, $promptLogType, $promptData) {
+        $prompt = $submission->prompt;
+        $service = new PeriodicRewardsManager;
+
+        if ($prompt->periodicRewards()->count()) {
+            $granted = $service->grantPeriodicReward($prompt, $user, $submission->user, $promptLogType, $promptData, Submission::approved($prompt->id, $submission->user_id)->get(), 'periodicRewards');
+            if ($granted === false) {
+                throw new \Exception('Failed to distribute periodic rewards: '.$service->errors()->first());
+            }
+            if (array_filter($granted)) {
+                $data = $submission->data;
+                $data['periodicrewards'] = getDataReadyAssets($granted);
+                $submission->update(['data' => json_encode($data)]);
+            }
+        }
+
+        if ($prompt->periodicCharacterRewards()->count()) {
+            foreach ($submission->characters()->where('is_focus', 1)->with('character')->get() as $subChar) {
+                if (!$subChar->character) {
+                    continue;
+                }
+                $granted = $service->grantPeriodicReward($prompt, $user, $subChar->character, $promptLogType, $promptData, $subChar->character->approvedSubmissions($prompt->id, $subChar->character_id)->get(), 'periodicCharacterRewards', true);
+                if ($granted === false) {
+                    throw new \Exception('Failed to distribute character periodic rewards: '.$service->errors()->first());
+                }
+                if (array_filter($granted)) {
+                    $subChar->update(['periodic_data' => json_encode(getDataReadyAssets($granted))]);
                 }
             }
         }

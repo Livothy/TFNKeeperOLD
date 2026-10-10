@@ -247,4 +247,17 @@ class Submission extends Model {
 
         return $rewards;
     }
+
+    /**
+     * Periodic Rewards: a user's approved submissions to a prompt.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $prompt
+     * @param int                                   $user
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeApproved($query, $prompt, $user) {
+        return $query->where('prompt_id', $prompt)->where('status', 'Approved')->where('user_id', $user);
+    }
 }
