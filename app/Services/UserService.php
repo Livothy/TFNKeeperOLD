@@ -305,7 +305,10 @@ class UserService extends Service {
         DB::beginTransaction();
 
         try {
-            $user->settings->birthday_setting = $data;
+            if (!in_array((string) $data, ['0', '1', '2', '3', '4', '5'], true)) {
+                throw new \Exception('Invalid birthday setting selected.');
+            }
+            $user->settings->birthday_setting = (int) $data;
             $user->settings->save();
 
             return $this->commitReturn(true);

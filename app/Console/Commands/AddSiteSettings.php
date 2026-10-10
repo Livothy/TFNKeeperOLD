@@ -105,6 +105,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('user_shop_limit', 1, 'User Shops: number of shops each user can make. 0 = unlimited.');
 
+        $this->addSiteSetting('birthday_item', 0, 'Birthday Rewards: ID of the item granted on the 1st of each user\'s birth month (a box item works well). 0 = off.');
+
         $this->line("\nSite settings up to date!");
     }
 

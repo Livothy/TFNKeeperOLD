@@ -638,6 +638,14 @@ class User extends Authenticatable implements MustVerifyEmail {
             case 3:
                 return $bday->format('d M Y').$icon;
                 break;
+            case 4:
+                if (Auth::check()) {
+                    return $bday->format('M');
+                }
+                break;
+            case 5:
+                return $bday->format('M');
+                break;
         }
     }
 

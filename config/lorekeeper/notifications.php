@@ -509,6 +509,13 @@ return [
         'url'     => '',
     ],
 
+    // BIRTHDAY_REWARDED
+    1105 => [
+        'name'    => 'Birthday Reward',
+        'message' => 'It\'s your birthday this month, {user_name}! A gift has been left in your inventory. (<a href="{url}">View Inventory</a>)',
+        'url'     => 'inventory',
+    ],
+
     // USER_SHOP_ITEM_SOLD
     1104 => [
         'name'    => 'User Shop Item Sold',

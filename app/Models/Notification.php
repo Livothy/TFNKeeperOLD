@@ -169,5 +169,6 @@ class Notification extends Model {
     public const RANK_REWARD = 1107;
     public const BORDER_GRANT = 1106;
     public const USER_SHOP_ITEM_SOLD = 1104;
+    public const BIRTHDAY_REWARDED = 1105;
     public const REFERRAL = 905;
 }
