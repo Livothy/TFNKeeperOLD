@@ -35,7 +35,7 @@ class AdventManager extends Service
             if(!$advent) throw new \Exception ("Invalid advent calendar.");
             // Lock the user's row so simultaneous requests are handled one at a time
             User::where('id', $user->id)->lockForUpdate()->first();
-            if(!$advent->isActive) throw new \Exception ("This advent calendar isn\'t active.");
+            if(!$advent->isActive) throw new \Exception ("This advent calendar isn't active.");
             if(!$advent->item($advent->day)) throw new \Exception('There is no prize for today.');
             if($advent->participants()->where('user_id', $user->id)->where('day', $advent->day)->exists()) throw new \Exception('You have already claimed today\'s prize.');
 

@@ -39,7 +39,7 @@ class HuntManager extends Service
             // Check that the target's parent hunt exists and is active.
             $hunt = $target->hunt;
             if(!$hunt) throw new \Exception ("Invalid hunt.");
-            if(!$hunt->isActive) throw new \Exception ("This target\'s hunt isn\'t active.");
+            if(!$hunt->isActive) throw new \Exception ("This target's hunt isn't active.");
 
             // Log that the user found this particular target
             $participantLog = $hunt->participants()->where('user_id', $user->id)->first();
