@@ -170,5 +170,8 @@ class Notification extends Model {
     public const BORDER_GRANT = 1106;
     public const USER_SHOP_ITEM_SOLD = 1104;
     public const BIRTHDAY_REWARDED = 1105;
+    public const AFFILIATE_ACCEPTION = 105;
+    public const AFFILIATE_REJECTION = 106;
+    public const AFFILIATE_PENDING = 107;
     public const REFERRAL = 905;
 }

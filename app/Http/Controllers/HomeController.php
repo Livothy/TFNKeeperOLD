@@ -45,6 +45,9 @@ class HomeController extends Controller {
 
         return view('welcome', [
             'about'               => SitePage::where('key', 'about')->first(),
+            'open'                => intval(\App\Facades\Settings::get('affiliates_open')),
+            'affiliates'          => \App\Models\Affiliate::where('status', 'Accepted')->featured(0)->inRandomOrder()->limit(10)->get(),
+            'featured_affiliates' => \App\Models\Affiliate::where('status', 'Accepted')->featured(1)->get(),
             'gallerySubmissions'  => $gallerySubmissions,
             'watchedSubmissions'  => $watchedSubmissions,
         ]);

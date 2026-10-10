@@ -117,6 +117,8 @@ class AddSiteSettings extends Command {
         $this->addSiteSetting('event_teams', 0, 'Event Tools: 1 = teams are open; event currency earned adds to the player\'s team score.');
         $this->addSiteSetting('event_weighting', 0, 'Event Tools: 1 = team scores are divided by member count.');
 
+        $this->addSiteSetting('affiliates_open', 0, 'Affiliates: are affiliate applications open? 0 = closed, 1 = open.');
+
         $this->line("\nSite settings up to date!");
     }
 

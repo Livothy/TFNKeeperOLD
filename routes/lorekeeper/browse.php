@@ -318,3 +318,15 @@ Route::group(['prefix' => 'challenges'], function () {
     Route::get('/', 'ChallengeController@getIndex');
     Route::get('{id}', 'ChallengeController@getChallenge')->where(['id' => '[0-9]+']);
 });
+
+/**************************************************************************************************
+    Affiliates
+**************************************************************************************************/
+
+Route::group(['prefix' => 'affiliates'], function () {
+    Route::get('/', 'AffiliateController@getIndex');
+    Route::get('apply', 'AffiliateController@getApply');
+    Route::get('status/{slug}', 'AffiliateController@getStatus');
+    // Public form: limit how often one visitor can apply
+    Route::post('apply', 'AffiliateController@postApply')->middleware('throttle:3,60');
+});

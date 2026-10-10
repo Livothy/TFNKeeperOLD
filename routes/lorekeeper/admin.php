@@ -942,3 +942,19 @@ Route::group(['prefix' => 'challenges', 'middleware' => 'power:manage_submission
     Route::get('/{status}', 'ChallengeController@getIndex')->where('status', 'active|old');
     Route::post('edit/{id}/{action}', 'ChallengeController@postChallenge');
 });
+
+// AFFILIATES
+Route::group(['prefix' => 'affiliates', 'middleware' => 'power:manage_affiliates'], function () {
+    Route::get('/', 'AffiliateController@getIndex');
+    Route::get('current', 'AffiliateController@getIndex');
+    Route::get('{status}', 'AffiliateController@getQueue')->where('status', 'pending|accepted|rejected');
+    Route::get('create', 'AffiliateController@getCreateAffiliate');
+    Route::get('edit/{id}', 'AffiliateController@getEditAffiliate');
+    Route::get('delete/{id}', 'AffiliateController@getDeleteAffiliate');
+    Route::get('edit/{id}/accept', 'AffiliateController@getAcceptAffiliate');
+    Route::get('edit/{id}/reject', 'AffiliateController@getRejectAffiliate');
+    Route::post('create', 'AffiliateController@postCreateEditAffiliate');
+    Route::post('edit/{id}', 'AffiliateController@postCreateEditAffiliate');
+    Route::post('edit/{id}/{action}', 'AffiliateController@postAffiliate')->where('action', 'accept|reject');
+    Route::post('delete/{id}', 'AffiliateController@postDeleteAffiliate');
+});

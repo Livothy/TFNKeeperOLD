@@ -72,4 +72,14 @@ return [
         'description' => 'Logo image that will display on top of the banner. Scales to fit the screen resolution.',
         'filename'    => 'logo.png',
     ],
+    'affiliate' => [
+        'name'        => 'Default Affiliate Image',
+        'description' => 'Shown for affiliates that have no image of their own.',
+        'filename'    => 'affiliate.png',
+    ],
+    'our_affiliate' => [
+        'name'        => 'Site Affiliate Image',
+        'description' => 'This site\'s own affiliate button, for other sites to use.',
+        'filename'    => 'our_affiliate.png',
+    ],
 ];

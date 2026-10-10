@@ -509,6 +509,27 @@ return [
         'url'     => '',
     ],
 
+    // AFFILIATE_ACCEPTION
+    105 => [
+        'name'    => 'Affiliate Request Accepted',
+        'message' => 'The affiliate request for {affiliate_name} has been accepted by {admin_name}. (<a href="{url}/{affiliate_slug}">View Status</a>)',
+        'url'     => 'affiliates/status',
+    ],
+
+    // AFFILIATE_REJECTION
+    106 => [
+        'name'    => 'Affiliate Request Rejected',
+        'message' => 'The affiliate request for {affiliate_name} has been rejected by {admin_name}. (<a href="{url}/{affiliate_slug}">View Status</a>)',
+        'url'     => 'affiliates/status',
+    ],
+
+    // AFFILIATE_PENDING
+    107 => [
+        'name'    => 'Affiliate Request Pending',
+        'message' => 'The affiliate request for {affiliate_name} is pending. (<a href="{url}/{affiliate_slug}">View Status</a>)',
+        'url'     => 'affiliates/status',
+    ],
+
     // BIRTHDAY_REWARDED
     1105 => [
         'name'    => 'Birthday Reward',
