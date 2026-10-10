@@ -484,4 +484,19 @@ class UserController extends Controller {
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
+
+    /**
+     * Shows a user's user shops.
+     *
+     * @param string $name
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserShops($name) {
+        return view('user.shops', [
+            'user'     => $this->user,
+            'shops'    => \App\Models\Shop\UserShop::visible(Auth::user())->where('user_id', $this->user->id)->orderBy('sort', 'DESC')->get(),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get(),
+        ]);
+    }
 }

@@ -184,6 +184,9 @@ class InventoryController extends Controller {
             $characters = Character::where('user_id', $user->id)->orderBy('slug', 'ASC')->get();
             $characterItems = CharacterItem::whereIn('character_id', $characters->pluck('id')->toArray())->where('item_id', $item->id)->where('count', '>', 0)->get();
 
+            // Gather stock in the user's shops
+            $shopItems = \App\Models\Shop\UserShopStock::with('shop')->whereIn('user_shop_id', $user->shops()->pluck('id')->toArray())->where('item_id', $item->id)->where('quantity', '>', 0)->get();
+
             // Gather hold locations
             $designUpdates = CharacterDesignUpdate::where('user_id', $user->id)->whereNotNull('data')->get();
             $trades = Trade::where('sender_id', $user->id)->orWhere('recipient_id', $user->id)->get();
@@ -199,6 +202,7 @@ class InventoryController extends Controller {
             'designUpdates'  => $item ? $designUpdates : null,
             'trades'         => $item ? $trades : null,
             'submissions'    => $item ? $submissions : null,
+            'shopItems'      => $item ? $shopItems : null,
         ]);
     }
 

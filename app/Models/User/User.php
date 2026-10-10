@@ -258,6 +258,13 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     /**
+     * Get the user's user shops.
+     */
+    public function shops() {
+        return $this->hasMany(\App\Models\Shop\UserShop::class, 'user_id');
+    }
+
+    /**
      * Gets all of a user's liked / disliked comments.
      */
     public function commentLikes() {
@@ -827,6 +834,22 @@ class User extends Authenticatable implements MustVerifyEmail {
         } else {
             return $query->paginate(30);
         }
+    }
+
+    /**
+     * Get the user's user shop purchase logs.
+     *
+     * @param int $limit
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
+     */
+    public function getUserShopLogs($limit = 10) {
+        $query = \App\Models\Shop\UserShopLog::where('user_id', $this->id)->with('shop')->with('item')->with('currency')->orderBy('id', 'DESC');
+        if ($limit) {
+            return $query->take($limit)->get();
+        }
+
+        return $query->paginate(30);
     }
 
     /**

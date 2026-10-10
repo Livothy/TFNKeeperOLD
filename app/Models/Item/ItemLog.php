@@ -45,6 +45,9 @@ class ItemLog extends Model {
         if ($this->sender_type == 'User') {
             return $this->belongsTo(User::class, 'sender_id');
         }
+        if ($this->sender_type == 'Shop') {
+            return $this->belongsTo(\App\Models\Shop\UserShop::class, 'sender_id');
+        }
 
         return $this->belongsTo(Character::class, 'sender_id');
     }
@@ -55,6 +58,9 @@ class ItemLog extends Model {
     public function recipient() {
         if ($this->recipient_type == 'User') {
             return $this->belongsTo(User::class, 'recipient_id');
+        }
+        if ($this->recipient_type == 'Shop') {
+            return $this->belongsTo(\App\Models\Shop\UserShop::class, 'recipient_id');
         }
 
         return $this->belongsTo(Character::class, 'recipient_id');

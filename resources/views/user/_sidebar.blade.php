@@ -19,6 +19,7 @@
         <div class="sidebar-item"><a href="{{ $user->url . '/inventory' }}" class="{{ set_active('user/' . $user->name . '/inventory*') }}">Inventory</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/' . __('awards.awardcase') }}" class="{{ set_active('user/' . $user->name . '/awardcase*') }}">{{ ucfirst(ucfirst(__('awards.awardcase'))) }}</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/bank' }}" class="{{ set_active('user/' . $user->name . '/bank*') }}">Bank</a></div>
+        <div class="sidebar-item"><a href="{{ $user->url . '/shops' }}" class="{{ set_active('user/' . $user->name . '/shops*') }}">User Shops</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/borders' }}" class="{{ set_active('user/' . $user->name . '/borders*') }}">Borders</a></div>
     </li>
     @if (

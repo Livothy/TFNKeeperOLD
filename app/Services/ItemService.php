@@ -327,6 +327,9 @@ class ItemService extends Service {
             if (DB::table('shop_stock')->where('item_id', $item->id)->exists()) {
                 throw new \Exception('A shop currently stocks this item. Please remove the item before deleting it.');
             }
+            if (DB::table('user_shop_stock')->where('item_id', $item->id)->where('quantity', '>', 0)->exists()) {
+                throw new \Exception('A user shop currently stocks this item. Please remove the item before deleting it.');
+            }
 
             if (!$this->logAdminAction($user, 'Deleted Item', 'Deleted '.$item->name)) {
                 throw new \Exception('Failed to log admin action.');
@@ -530,6 +533,7 @@ class ItemService extends Service {
         isset($data['is_character_owned']) && $data['is_character_owned'] ? $data['is_character_owned'] : $data['is_character_owned'] = 0;
         isset($data['character_limit']) && $data['character_limit'] ? $data['character_limit'] : $data['character_limit'] = 0;
         isset($data['can_name']) && $data['can_name'] ? $data['can_name'] : $data['can_name'] = 0;
+        $data['can_user_sell'] = isset($data['can_user_sell']) && $data['can_user_sell'] ? 1 : 0;
 
         if (!isset($data['is_visible'])) {
             $data['is_visible'] = 0;

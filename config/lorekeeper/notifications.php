@@ -509,6 +509,13 @@ return [
         'url'     => '',
     ],
 
+    // USER_SHOP_ITEM_SOLD
+    1104 => [
+        'name'    => 'User Shop Item Sold',
+        'message' => 'You sold {item_quantity} {item_name} in <a href="{url}">{shop_name}</a> and were paid {currency_quantity} {currency_name}.',
+        'url'     => 'user-shops/sales/{shop_id}',
+    ],
+
     // BORDER_GRANT
     1106 => [
         'name' => 'Border Grant',

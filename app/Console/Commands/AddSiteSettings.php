@@ -103,6 +103,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('fetch_timer_global', 1, 'Fetch Quests: does completing one fetch quest lock you out of all other ones? 0 = no, 1 = yes. Uses the most recent completed fetch for the timer.');
 
+        $this->addSiteSetting('user_shop_limit', 1, 'User Shops: number of shops each user can make. 0 = unlimited.');
+
         $this->line("\nSite settings up to date!");
     }
 

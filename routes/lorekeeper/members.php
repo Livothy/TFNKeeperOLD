@@ -84,6 +84,32 @@ Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function () {
     Route::post('consolidate', 'InventoryController@postConsolidateInventory');
 
     Route::get('selector', 'InventoryController@getSelector');
+
+    Route::get('quickstock', 'UserShopController@getQuickstock');
+    Route::post('quickstock-items', 'UserShopController@postQuickstock');
+});
+
+Route::group(['prefix' => 'user-shops', 'namespace' => 'Users'], function () {
+    Route::get('/', 'UserShopController@getUserIndex');
+    Route::get('create', 'UserShopController@getCreateShop');
+    Route::get('edit/{id}', 'UserShopController@getEditShop')->where('id', '[0-9]+');
+    Route::get('delete/{id}', 'UserShopController@getDeleteShop')->where('id', '[0-9]+');
+    Route::post('create', 'UserShopController@postCreateEditShop');
+    Route::post('edit/{id}', 'UserShopController@postCreateEditShop')->where('id', '[0-9]+');
+    Route::post('delete/{id}', 'UserShopController@postDeleteShop')->where('id', '[0-9]+');
+    Route::post('sort', 'UserShopController@postSortShop');
+    Route::post('stock/{id}', 'UserShopController@postEditStock')->where('id', '[0-9]+');
+
+    Route::get('history', 'UserShopController@getPurchaseHistory');
+    Route::get('item-search', 'UserShopController@getItemSearch');
+    Route::get('sales/{id}', 'UserShopController@getShopHistory')->where('id', '[0-9]+');
+});
+
+Route::group(['prefix' => 'user-shops'], function () {
+    Route::get('shop-index', 'UserShopController@getIndex');
+    Route::get('shop/{id}', 'UserShopController@getShop')->where('id', '[0-9]+');
+    Route::post('shop/buy', 'UserShopController@postBuy');
+    Route::get('{id}/{stockId}', 'UserShopController@getShopStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
 
 Route::group(['prefix' => __('safetydeposit.url'), 'namespace' => 'Users'], function () {

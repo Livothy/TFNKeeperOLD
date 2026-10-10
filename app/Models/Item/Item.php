@@ -411,6 +411,20 @@ class Item extends Model {
         return 'edit_data';
     }
 
+    /**
+     * Whether this item can be sold in user shops: it must be transferable,
+     * and either uncategorized or in a category that allows user selling.
+     *
+     * @return bool
+     */
+    public function getCanUserSellAttribute() {
+        if (!$this->allow_transfer) {
+            return false;
+        }
+
+        return !$this->category || (bool) $this->category->can_user_sell;
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS

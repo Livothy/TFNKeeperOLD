@@ -157,6 +157,9 @@ class CurrencyService extends Service {
             if (DB::table('shop_stock')->where('currency_id', $currency->id)->exists()) {
                 throw new \Exception('A shop currently requires this currency to purchase an currency. Please change the currency before deleting it.');
             }
+            if (DB::table('user_shop_stock')->where('currency_id', $currency->id)->where('quantity', '>', 0)->exists()) {
+                throw new \Exception('A user shop currently sells items for this currency. Please change the currency before deleting it.');
+            }
             // Disabled for now due to issues with JSON lookup with older mysql versions/mariaDB
             // if(DB::table('items')->where('data->resell', $currency->id)->exists()) throw new \Exception("An item currently uses this currency for its resale value. Please change the resale information before deleting this currency.");
 
