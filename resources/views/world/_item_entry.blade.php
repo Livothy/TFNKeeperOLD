@@ -68,6 +68,34 @@
                 </p>
             @endif
             {!! $description !!}
+            @if ($item->hasTag('border'))
+                <div class="mb-2">
+                    <a data-toggle="collapse" href="#border{{ $item->id }}" class="h5">Unlocks Borders <i class="fas fa-caret-down"></i></a>
+                    <div class="card collapse mt-1" id="border{{ $item->id }}">
+                        <div class="card-body">
+                            @if (isset($item->tag('border')->data['all_borders']))
+                                <p class="text-center">Each use of this item unlocks <strong>one</strong> random border between all onsite.</p>
+                            @else
+                                <p class="text-center">Each use of this item unlocks <strong>one</strong> of the following borders randomly.<br>
+                                    If one is crossed out, you already have it.</p>
+                                <div class="row">
+                                    @foreach (parseAssetData($item->tag('border')->data, true) as $type)
+                                        @foreach ($type as $border)
+                                            @if ($border['asset'])
+                                                <div class="col-md" style="{{ Auth::check() && Auth::user()->hasBorder($border['asset']->id) ? 'text-decoration: line-through; opacity:0.5;' : '' }}">
+                                                    <img src="{{ $border['asset']->image_url }}" style="height: 3rem; padding-right: .5rem;" alt="{{ $border['asset']->name }}"> {!! $border['asset']->displayName !!}
+                                                </div>
+                                            @else
+                                                <div class="col-md">(Deleted Border)</div>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
             @if (((isset($item->uses) && $item->uses) || (isset($item->source) && $item->source) || $item->shop_stock_count || (isset($item->data['prompts']) && $item->data['prompts'])) && config('lorekeeper.extensions.item_entry_expansion.extra_fields'))
                 <div class="text-right">
                     <a data-toggle="collapse" href="#item-{{ $item->id }}" class="text-primary">

@@ -19,6 +19,9 @@
             ->pluck('name', 'id');
     }
     $awards = \App\Models\Award\Award::orderBy('name')->pluck('name', 'id');
+    if (isset($showBorders) && $showBorders) {
+        $borders = \App\Models\Border\Border::base()->where('is_default', 0)->where('admin_only', 0)->orderBy('name')->pluck('name', 'id');
+    }
 @endphp
 
 <div class="text-right mb-3">
@@ -39,7 +42,7 @@
                 <tr class="loot-row">
                     <td>{!! Form::select(
                         'rewardable_type[]',
-                        ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award'))] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []),
+                        ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award'))] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []) + (isset($showBorders) && $showBorders ? ['Border' => 'Border'] : []),
                         $loot->rewardable_type,
                         [
                             'class' => 'form-control reward-type',
@@ -55,6 +58,8 @@
                             {!! Form::select('rewardable_id[]', $tables, $loot->rewardable_id, ['class' => 'form-control table-select selectize', 'placeholder' => 'Select Loot Table']) !!}
                         @elseif($showRaffles && $loot->rewardable_type == 'Raffle')
                             {!! Form::select('rewardable_id[]', $raffles, $loot->rewardable_id, ['class' => 'form-control raffle-select selectize', 'placeholder' => 'Select Raffle']) !!}
+                        @elseif(isset($showBorders) && $showBorders && $loot->rewardable_type == 'Border')
+                            {!! Form::select('rewardable_id[]', $borders, $loot->rewardable_id, ['class' => 'form-control border-select selectize', 'placeholder' => 'Select Border']) !!}
                         @elseif($loot->rewardable_type == 'Award')
                             {!! Form::select('rewardable_id[]', $awards, $loot->rewardable_id, ['class' => 'form-control award-select selectize', 'placeholder' => 'Select ' . ucfirst(__('awards.award'))]) !!}
                         @endif

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Award\Award;
 use App\Models\Award\AwardCategory;
 use App\Models\Character\Character;
+use App\Models\Border\Border;
 use App\Models\Character\CharacterImage;
 use App\Models\Character\Sublist;
 use App\Models\Currency\Currency;
@@ -445,6 +446,42 @@ class UserController extends Controller {
         return view('user.page', [
             'user'       => $this->user,
             'userPage'   => $userPage,
+        ]);
+    }
+
+    /**
+     * Shows a user's borders.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserBorders($name)
+    {
+        $default =  Border::base()->active(Auth::user() ?? null)->where('is_default', 1)->get();
+        $admin = Border::base()->where('admin_only', 1)->get();
+        
+        return view('user.borders', [
+            'user' => $this->user,
+            'default' => $default,
+            'admin' => $admin,
+            'logs' => $this->user->getBorderLogs(),
+        ]);
+    }
+
+    /**
+     * Shows a user's border logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserBorderLogs($name)
+    {
+        $user = $this->user;
+
+        return view('user.border_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getBorderLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
 }

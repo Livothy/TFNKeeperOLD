@@ -9,7 +9,7 @@
 <div class="row mb-3">
     <div class="col-md-2 text-center">
         <!-- User Icon -->
-        <img src="{{ $user->avatarUrl }}" class="img-fluid rounded-circle" style="max-height: 125px;" alt="{{ $user->name }}'s Avatar">
+        {!! $user->userBorder() !!}
     </div>
 
     <div class="col">
@@ -76,6 +76,16 @@
                         <h5>Birthday</h5>
                     </div>
                     <div class="col-md-8 col-8">{!! $user->birthdayDisplay !!}</div>
+                </div>
+            @endif
+            @if ($user->border)
+                <div class="row no-gutters col-sm-5">
+                    <div class="col-lg-3 col-md-3 col-4">
+                        <h5>Border</h5>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-8">
+                        <a href="{{ $user->border->idUrl }}">{{ $user->border->name }}@if ($user->borderVariant) ({{ $user->borderVariant->name }})@endif</a>
+                    </div>
                 </div>
             @endif
             @if ($user_enabled && isset($user->home_id))

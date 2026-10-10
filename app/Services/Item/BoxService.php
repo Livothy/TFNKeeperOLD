@@ -89,6 +89,9 @@ class BoxService extends Service {
                     case 'Raffle':
                         $type = 'App\Models\Raffle\Raffle';
                         break;
+                    case 'Border':
+                        $type = 'App\Models\Border\Border';
+                        break;
                 }
                 $asset = $type::find($data['rewardable_id'][$key]);
                 addAsset($assets, $asset, $data['quantity'][$key]);

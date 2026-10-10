@@ -402,6 +402,31 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('volumes/bookshelves/delete/{id}', 'VolumeController@postDeleteBookshelf');
     Route::post('volumes/bookshelves/books/{id}', 'VolumeController@postSortBooks');
     Route::post('volumes/bookshelves/sort', 'VolumeController@postSortBookshelves');
+
+    // BORDERS
+    Route::get('border-categories', 'BorderController@getIndex');
+    Route::get('border-categories/create', 'BorderController@getCreateBorderCategory');
+    Route::get('border-categories/edit/{id}', 'BorderController@getEditBorderCategory');
+    Route::get('border-categories/delete/{id}', 'BorderController@getDeleteBorderCategory');
+    Route::post('border-categories/create', 'BorderController@postCreateEditBorderCategory');
+    Route::post('border-categories/edit/{id?}', 'BorderController@postCreateEditBorderCategory');
+    Route::post('border-categories/delete/{id}', 'BorderController@postDeleteBorderCategory');
+    Route::post('border-categories/sort', 'BorderController@postSortBorderCategory');
+
+    Route::get('borders', 'BorderController@getBorderIndex');
+    Route::get('borders/create', 'BorderController@getCreateBorder');
+    Route::get('borders/edit/{id}', 'BorderController@getEditBorder');
+    Route::get('borders/delete/{id}', 'BorderController@getDeleteBorder');
+    Route::post('borders/create', 'BorderController@postCreateEditBorder');
+    Route::post('borders/edit/{id?}', 'BorderController@postCreateEditBorder');
+    Route::post('borders/delete/{id}', 'BorderController@postDeleteBorder');
+
+    Route::get('borders/edit/{border_id}/{type}s/create', 'BorderController@getCreateEditVariant');
+    Route::get('borders/edit/{border_id}/{type}s/edit/{id}', 'BorderController@getCreateEditVariant');
+    Route::post('borders/edit/{border_id}/{type}s/create', 'BorderController@postCreateEditVariant');
+    Route::post('borders/edit/{border_id}/{type}s/edit/{id}', 'BorderController@postCreateEditVariant');
+
+    Route::post('borders/item/{id}', 'BorderController@postCreateItem');
 });
 
 // RAIDS
@@ -505,6 +530,9 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
 
     Route::get('awards', 'GrantController@getAwards');
     Route::post('awards', 'GrantController@postAwards');
+
+    Route::get('borders', 'GrantController@getBorders');
+    Route::post('borders', 'GrantController@postBorders');
 });
 
 // MASTERLIST

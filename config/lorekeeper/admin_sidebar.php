@@ -129,6 +129,10 @@ return [
                 'name' => 'Award Grants',
                 'url'  => 'admin/grants/awards',
             ],
+            [
+                'name' => 'Border Grants',
+                'url'  => 'admin/grants/borders',
+            ],
         ],
     ],
     'Masterlist' => [
@@ -242,6 +246,10 @@ return [
             [
                 'name' => 'Library',
                 'url'  => 'admin/data/volumes',
+            ],
+            [
+                'name' => 'User Borders',
+                'url'  => 'admin/data/borders',
             ],
             [
                 'name' => 'Random Generators',

@@ -30,6 +30,9 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function () {
     Route::post('location', 'AccountController@postLocation');
     Route::post('faction', 'AccountController@postFaction');
     Route::post('avatar', 'AccountController@postAvatar');
+    Route::post('border', 'AccountController@postBorder');
+    Route::get('check-border', 'AccountController@getBorderVariants');
+    Route::get('check-layers', 'AccountController@getBorderLayers');
     Route::post('username', 'AccountController@postUsername');
     Route::get('aliases', 'AccountController@getAliases');
     Route::get('make-primary/{id}', 'AccountController@getMakePrimary');

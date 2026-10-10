@@ -500,4 +500,12 @@ return [
         'message' => 'You didn\'t do sufficient damage to the {raid_word} <a href="{raid_url}">{raid_name}</a> to qualify for any rewards. Maybe next time...',
         'url'     => '',
     ],
+
+    
+    // BORDER_GRANT
+    1106 => [
+        'name' => 'Border Grant',
+        'message' => 'You have received a staff grant of the user border {border_name} from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Borders</a>)',
+        'url' => 'user/{recipient_name}/borders'
+    ],
 ];

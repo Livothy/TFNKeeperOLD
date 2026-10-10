@@ -59,6 +59,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/myos', 'UserController@getUserMyoSlots');
     Route::get('{name}/inventory', 'UserController@getUserInventory');
     Route::get('{name}/bank', 'UserController@getUserBank');
+    Route::get('{name}/borders', 'UserController@getUserBorders');
     Route::get('{name}/page/{key}', 'UserController@getUserPage');
 
     Route::get('{name}/'.__('awards.awardcase'), 'UserController@getUserAwardCase');
@@ -67,6 +68,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/'.__('awards.award').'-logs', 'UserController@getUserAwardLogs');
     Route::get('{name}/ownership', 'UserController@getUserOwnershipLogs');
     Route::get('{name}/submissions', 'UserController@getUserSubmissions');
+    Route::get('{name}/border-logs', 'UserController@getUserBorderLogs');
 });
 
 # STAFF TEAM
@@ -138,6 +140,11 @@ Route::group(['prefix' => 'world'], function () {
     Route::get(__('volumes.library').'/'.__('volumes.volume').'/{id}', 'WorldController@getVolume');
     Route::get(__('volumes.library').'/'.__('volumes.book').'/{id}', 'WorldController@getBook');
     Route::get(__('volumes.library').'/'.__('volumes.volumes'), 'WorldController@getVolumes');
+
+    Route::get('border-categories', 'WorldController@getBorderCategories');
+    Route::get('borders', 'WorldController@getBorders');
+    Route::get('borders/{id}', 'WorldController@getBorder');
+    Route::get('check-border', 'WorldController@getBorderPreview');
 });
 
 // RAIDS

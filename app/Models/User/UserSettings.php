@@ -13,7 +13,7 @@ class UserSettings extends Model {
     protected $fillable = [
         'is_fto', 'submission_count', 'banned_at', 'ban_reason', 'birthday_setting',
         'deactivate_reason', 'deactivated_at',
-        'allow_character_likes',
+        'allow_character_likes', 'border_settings',
     ];
 
     /**
@@ -31,6 +31,7 @@ class UserSettings extends Model {
     protected $casts = [
         'banned_at'      => 'datetime',
         'deactivated_at' => 'datetime',
+        'border_settings' => 'array',
     ];
 
     /**

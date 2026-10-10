@@ -19,6 +19,7 @@
         <div class="sidebar-item"><a href="{{ $user->url . '/inventory' }}" class="{{ set_active('user/' . $user->name . '/inventory*') }}">Inventory</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/' . __('awards.awardcase') }}" class="{{ set_active('user/' . $user->name . '/awardcase*') }}">{{ ucfirst(ucfirst(__('awards.awardcase'))) }}</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/bank' }}" class="{{ set_active('user/' . $user->name . '/bank*') }}">Bank</a></div>
+        <div class="sidebar-item"><a href="{{ $user->url . '/borders' }}" class="{{ set_active('user/' . $user->name . '/borders*') }}">Borders</a></div>
     </li>
     @if (
         $user->pages->count() &&
@@ -49,6 +50,7 @@
         <div class="sidebar-item"><a href="{{ $user->url . '/currency-logs' }}" class="{{ set_active('user/' . $user->name . '/currency-logs*') }}">Currency Logs</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/' . __('awards.award') . '-logs' }}" class="{{ set_active($user->url . '/award-logs*') }}">{{ ucfirst(ucfirst(__('awards.award'))) }} Logs</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/submissions' }}" class="{{ set_active('user/' . $user->name . '/submissions*') }}">Submissions</a></div>
+        <div class="sidebar-item"><a href="{{ $user->url . '/border-logs' }}" class="{{ set_active('user/' . $user->name . '/border-logs*') }}">Border Logs</a></div>
     </li>
 
     @if (Auth::check() && Auth::user()->hasPower('edit_user_info'))

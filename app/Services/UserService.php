@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Facades\Notifications;
 use App\Facades\Settings;
+use App\Models\Border\Border;
 use Auth;
 use App\Models\User\StaffProfile;
 use App\Models\Character\CharacterDesignUpdate;
@@ -974,5 +975,98 @@ class UserService extends Service {
         $user->settings->save();
 
         return true;
+    }
+
+    /**
+     * Updates the user's border.
+     *
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
+     * @return bool
+     */
+    public function updateBorder($data, $user) {
+        DB::beginTransaction();
+
+        try {
+            $borderId = (int) ($data['border'] ?? 0);
+            $variantId = (int) ($data['border_variant_id'] ?? 0);
+            $bottomId = (int) ($data['bottom_border_id'] ?? 0);
+            $topId = (int) ($data['top_border_id'] ?? 0);
+
+            // TFN: variants and layers must belong to the chosen main border,
+            // and ownership/active/staff-only checks apply to every part.
+            $border = null;
+            if ($borderId) {
+                $border = Border::base()->where('id', $borderId)->first();
+                if (!$border) {
+                    throw new \Exception('Invalid border selected.');
+                }
+                $this->checkBorderUsable($border, $border, $user);
+            }
+
+            if ($variantId) {
+                $variant = $border ? Border::where('id', $variantId)->where('parent_id', $border->id)->where('border_type', 'variant')->first() : null;
+                if (!$variant) {
+                    throw new \Exception('Invalid border variant selected.');
+                }
+                $this->checkBorderUsable($variant, $border, $user);
+            }
+
+            if ((bool) $bottomId != (bool) $topId) {
+                throw new \Exception('You must select both a top border and a bottom border.');
+            }
+            if ($bottomId) {
+                $bottom = $border ? Border::where('id', $bottomId)->where('parent_id', $border->id)->where('border_type', 'bottom')->first() : null;
+                if (!$bottom) {
+                    throw new \Exception('That bottom border does not exist.');
+                }
+                $top = Border::where('id', $topId)->where('parent_id', $border->id)->where('border_type', 'top')->first();
+                if (!$top) {
+                    throw new \Exception('That top border does not exist.');
+                }
+                $this->checkBorderUsable($bottom, $border, $user);
+                $this->checkBorderUsable($top, $border, $user);
+            }
+
+            $user->border_id = $borderId ?: null;
+            $user->border_variant_id = $variantId ?: null;
+            $user->bottom_border_id = $bottomId ?: null;
+            $user->top_border_id = $topId ?: null;
+            $user->save();
+
+            $user->settings->border_settings = [
+                'border_flip' => isset($data['border_flip']) && $data['border_flip'] ? 1 : 0,
+            ];
+            $user->settings->save();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Throws if a non-staff user may not use this border (or a variant/layer of $parent).
+     *
+     * @param \App\Models\Border\Border $border
+     * @param \App\Models\Border\Border $parent
+     * @param \App\Models\User\User     $user
+     */
+    private function checkBorderUsable($border, $parent, $user) {
+        if ($user->isStaff) {
+            return;
+        }
+        if ($parent->admin_only) {
+            throw new \Exception('You cannot select a staff border.');
+        }
+        if (!$parent->is_default && !$user->hasBorder($parent->id)) {
+            throw new \Exception('You do not own this border.');
+        }
+        if (!$border->is_active || !$parent->is_active) {
+            throw new \Exception('This border is not active.');
+        }
     }
 }

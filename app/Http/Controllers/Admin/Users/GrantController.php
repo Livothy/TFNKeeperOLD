@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\Award\Award;
+use App\Models\Border\Border;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterItem;
@@ -14,6 +15,7 @@ use App\Models\Trade;
 use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Services\AwardCaseManager;
+use App\Services\BorderService;
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;
 use Illuminate\Http\Request;
@@ -155,5 +157,37 @@ class GrantController extends Controller {
             'trades'         => $item ? $trades : null,
             'submissions'    => $item ? $submissions : null,
         ]);
+    }
+
+    /**
+     * Show the border grant page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getBorders()
+    {
+        return view('admin.grants.borders', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+            'borders' => Border::base()->where('is_default', 0)->where('admin_only', 0)->orderBy('name')->pluck('name', 'id')
+        ]);
+    }
+
+    /**
+     * Grants or removes items from multiple users.
+     *
+     * @param  \Illuminate\Http\Request        $request
+     * @param  App\Services\InventoryManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postBorders(Request $request, BorderService $service)
+    {
+        $data = $request->only(['names', 'border_ids', 'data']);
+        if($service->grantBorders($data, Auth::user())) {
+            flash('Borders granted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
     }
 }
