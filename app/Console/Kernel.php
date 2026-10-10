@@ -35,6 +35,8 @@ class Kernel extends ConsoleKernel {
             ->daily();
         $schedule->command('clear-week-old-user-ads')
             ->daily();
+        $schedule->command('reward-ranks')
+            ->daily();
 
         $schedule->command('update-timed-daily')
             ->everyMinute();

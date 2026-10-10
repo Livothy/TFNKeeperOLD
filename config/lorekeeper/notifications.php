@@ -480,6 +480,13 @@ return [
         'url'     => 'gallery/view/{submission_id}',
     ],
 
+    // RANK_REWARD
+    1107 => [
+        'name'    => 'Rank Reward',
+        'message' => 'You received rewards for being part of the {rank_name} rank: {rewards}',
+        'url'     => '',
+    ],
+
     // RAID_PARTICIPANT_REWARDS
     4200  => [
         'name'    => 'Participation Rewards Distributed',

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Rank\Rank;
+use App\Models\RankReward;
 use App\Models\User\User;
 use Illuminate\Support\Facades\DB;
 
@@ -145,6 +146,10 @@ class RankService extends Service {
             // Disallow deletion of ranks that are currently assigned to users
             if (User::where('rank_id', $rank->id)->exists()) {
                 throw new \Exception('There are currently user(s) with the selected rank. Please change their rank before deleting this one.');
+            }
+            // Disallow deletion of ranks that have rank rewards
+            if (RankReward::where('rank_id', $rank->id)->exists()) {
+                throw new \Exception('A rank reward uses this rank. Please change its rank or delete it first.');
             }
 
             $rank->powers()->delete();

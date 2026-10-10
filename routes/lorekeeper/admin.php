@@ -15,6 +15,15 @@ Route::get('logs', 'HomeController@getLogs');
 Route::group(['middleware' => 'admin'], function () {
     Route::get('staff-reward-settings', 'HomeController@getStaffRewardSettings');
     Route::post('staff-reward-settings/{key}', 'HomeController@postEditStaffRewardSetting');
+
+    // RANK REWARDS
+    Route::get('rank-rewards', 'RankRewardController@getIndex');
+    Route::get('rank-rewards/create', 'RankRewardController@getCreateRankReward');
+    Route::get('rank-rewards/edit/{id}', 'RankRewardController@getEditRankReward');
+    Route::get('rank-rewards/delete/{id}', 'RankRewardController@getDeleteRankReward');
+    Route::post('rank-rewards/create', 'RankRewardController@postCreateEditRankReward');
+    Route::post('rank-rewards/edit/{id?}', 'RankRewardController@postCreateEditRankReward');
+    Route::post('rank-rewards/delete/{id}', 'RankRewardController@postDeleteRankReward');
 });
 
 Route::group(['prefix' => 'users', 'namespace' => 'Users'], function () {
