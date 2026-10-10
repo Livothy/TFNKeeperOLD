@@ -370,3 +370,12 @@ Route::group(['prefix' => 'higher-or-lower'], function() {
 Route::group(['prefix' => 'event-tracking'], function () {
     Route::post('team/{id}', 'EventController@postJoinTeam')->where('id', '[0-9]+');
 });
+
+/**************************************************************************************************
+    Advent Calendars
+**************************************************************************************************/
+
+Route::group(['prefix' => 'advent-calendars'], function () {
+    Route::get('{id}', 'AdventController@getAdvent')->where('id', '[0-9]+');
+    Route::post('{id}', 'AdventController@postClaimPrize')->where('id', '[0-9]+');
+});

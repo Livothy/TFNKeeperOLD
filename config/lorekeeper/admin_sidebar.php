@@ -272,6 +272,10 @@ return [
                 'url'  => 'admin/event-settings',
             ],
             [
+                'name' => 'Advent Calendars',
+                'url'  => 'admin/data/advent-calendars',
+            ],
+            [
                 'name' => 'Forms & Polls',
                 'url'  => 'admin/forms',
             ],
