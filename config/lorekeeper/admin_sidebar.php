@@ -276,6 +276,10 @@ return [
                 'url'  => 'admin/data/advent-calendars',
             ],
             [
+                'name' => 'Scavenger Hunts',
+                'url'  => 'admin/data/hunts',
+            ],
+            [
                 'name' => 'Forms & Polls',
                 'url'  => 'admin/forms',
             ],

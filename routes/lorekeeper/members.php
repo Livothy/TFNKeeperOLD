@@ -379,3 +379,13 @@ Route::group(['prefix' => 'advent-calendars'], function () {
     Route::get('{id}', 'AdventController@getAdvent')->where('id', '[0-9]+');
     Route::post('{id}', 'AdventController@postClaimPrize')->where('id', '[0-9]+');
 });
+
+/**************************************************************************************************
+    Scavenger Hunts
+**************************************************************************************************/
+
+Route::group(['prefix' => 'hunts'], function () {
+    Route::get('{id}', 'HuntController@getHunt')->where('id', '[0-9]+');
+    Route::get('targets/{pageId}', 'HuntController@getTarget');
+    Route::post('targets/claim', 'HuntController@postClaimTarget');
+});
