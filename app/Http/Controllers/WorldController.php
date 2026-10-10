@@ -27,6 +27,9 @@ use App\Models\Volume\BookTag;
 use App\Models\Volume\Volume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Weather\Weather;
+use App\Models\Weather\WeatherSeason;
+use Settings;
 use App\Models\Character\CharacterTransformation as Transformation;
 
 class WorldController extends Controller {
@@ -838,6 +841,64 @@ class WorldController extends Controller {
             'top' => $top,
             'bottom' => $bottom,
             'border' => $border,
+        ]);
+    }
+
+    /**
+     * Shows the seasons page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getSeasons(Request $request) {
+        $query = WeatherSeason::visible();
+        if ($request->get('name')) {
+            $query->where('name', 'LIKE', '%'.$request->get('name').'%');
+        }
+        switch ($request->get('sort')) {
+            case 'alpha':
+                $query->sortAlphabetical();
+                break;
+            case 'alpha-reverse':
+                $query->sortAlphabetical(true);
+                break;
+            case 'newest':
+                $query->sortNewest();
+                break;
+            case 'oldest':
+                $query->sortOldest();
+                break;
+        }
+
+        return view('world.seasons', [
+            'seasons' => $query->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
+     * Shows the weather page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getWeather(Request $request) {
+        $query = Weather::visible();
+        if ($request->get('name')) {
+            $query->where('name', 'LIKE', '%'.$request->get('name').'%');
+        }
+
+        return view('world.weathers', [
+            'weathers' => $query->orderBy('name')->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
+     * Shows the current weather and season.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getForecast() {
+        return view('world.forecast', [
+            'weather' => Weather::visible()->where('id', Settings::get('site_weather'))->first(),
+            'season'  => WeatherSeason::visible()->where('id', Settings::get('site_season'))->first(),
         ]);
     }
 }

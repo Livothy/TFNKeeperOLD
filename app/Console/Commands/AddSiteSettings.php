@@ -107,6 +107,10 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('birthday_item', 0, 'Birthday Rewards: ID of the item granted on the 1st of each user\'s birth month (a box item works well). 0 = off.');
 
+        $this->addSiteSetting('site_season', 0, 'Weather: ID of the season the site is currently in.');
+        $this->addSiteSetting('site_weather', 0, 'Weather: ID of the weather the site currently has.');
+        $this->addSiteSetting('site_weather_cycle', 0, 'Weather: how often the weather is re-rolled from the season. 0 = never, 1 = daily, 2 = weekly (Mondays), 3 = monthly (the 1st).');
+
         $this->line("\nSite settings up to date!");
     }
 

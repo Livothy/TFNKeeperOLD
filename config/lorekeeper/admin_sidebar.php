@@ -264,6 +264,10 @@ return [
                 'url'  => 'admin/data/fetch-quests',
             ],
             [
+                'name' => 'Weather & Seasons',
+                'url'  => 'admin/weather/weathers',
+            ],
+            [
                 'name' => 'Forms & Polls',
                 'url'  => 'admin/forms',
             ],

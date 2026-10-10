@@ -43,6 +43,10 @@ class Kernel extends ConsoleKernel {
             ->hourly();
         $schedule->command('distribute-birthday-rewards')
             ->monthly();
+        $schedule->command('cycle-site-weather')
+            ->daily();
+        $schedule->command('change-site-season')
+            ->everyMinute();
 
         $schedule->command('update-timed-daily')
             ->everyMinute();
