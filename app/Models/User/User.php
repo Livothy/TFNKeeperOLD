@@ -46,6 +46,7 @@ class User extends Authenticatable implements MustVerifyEmail {
         'is_deactivated', 'deactivater_id', 'last_seen',
         'home_id', 'home_changed', 'faction_id', 'faction_changed',
         'border_id', 'border_variant_id', 'bottom_border_id', 'top_border_id',
+        'referred_by',
     ];
 
     /**

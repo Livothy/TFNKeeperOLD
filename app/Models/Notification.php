@@ -168,4 +168,5 @@ class Notification extends Model {
     public const CHARACTER_AWARD_REMOVAL = 346;
     public const RANK_REWARD = 1107;
     public const BORDER_GRANT = 1106;
+    public const REFERRAL = 905;
 }

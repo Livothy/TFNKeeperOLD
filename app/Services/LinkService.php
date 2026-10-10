@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Facades\Notifications;
+use App\Models\Referral;
+use App\Models\User\User;
 use App\Models\User\UserAlias;
 use App\Models\User\UserUpdateLog;
 use Illuminate\Support\Facades\DB;
@@ -73,6 +76,11 @@ class LinkService extends Service {
                 // ID should always exist but just in case.
                 'user_snowflake' => $result->id ?? $result->nickname,
             ]);
+
+            // Referral Rewards: on the user's first alias, reward whoever referred them
+            if (!$user->has_alias && $user->referred_by) {
+                $this->rewardReferrer($user);
+            }
 
             // Save that the user has an alias
             $user->has_alias = 1;
@@ -198,5 +206,42 @@ class LinkService extends Service {
         }
 
         return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Referral Rewards: grants any matching referral rewards to the user who referred $user.
+     *
+     * @param \App\Models\User\User $user the referred user, linking their first alias
+     */
+    private function rewardReferrer($user) {
+        $referrer = User::where('id', $user->referred_by)->where('is_banned', 0)->first();
+        if (!$referrer) {
+            return;
+        }
+        // plus 1 because the user currently registering their alias isn't counted yet
+        $referralCount = User::where('referred_by', $referrer->id)->where('has_alias', 1)->count() + 1;
+        $conditions = Referral::where('is_active', 1)->where('referral_count', '>', 0)->get()->filter(function ($referral) use ($referralCount) {
+            // "on every" rewards repeat each time the count is a multiple of referral_count
+            return ($referral->on_every && $referralCount % $referral->referral_count === 0) || $referralCount == $referral->referral_count;
+        });
+        if (!count($conditions)) {
+            return;
+        }
+
+        $rewards = [];
+        foreach ($conditions as $condition) {
+            $assets = fillUserAssets(parseAssetData($condition->parsedData), null, $referrer, 'Referral Rewards', [
+                'data' => 'Received rewards for referral of '.$user->name,
+            ]);
+            if ($assets === false) {
+                throw new \Exception('Failed to distribute referral rewards.');
+            }
+            $rewards[] = getRewardsString($assets);
+        }
+
+        Notifications::create('REFERRAL', $referrer, [
+            'count'   => $referralCount,
+            'rewards' => implode(', ', array_filter($rewards)),
+        ]);
     }
 }

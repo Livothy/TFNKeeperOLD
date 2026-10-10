@@ -252,6 +252,10 @@ return [
                 'url'  => 'admin/data/borders',
             ],
             [
+                'name' => 'Referrals',
+                'url'  => 'admin/data/referrals',
+            ],
+            [
                 'name' => 'Random Generators',
                 'url'  => 'admin/data/random',
             ],

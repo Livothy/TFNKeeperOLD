@@ -461,3 +461,53 @@ function createRewardsString($array) {
 
     return implode(', ', array_slice($string, 0, count($string) - 1)).(count($string) > 2 ? ', and ' : ' and ').end($string);
 }
+
+/**
+ * Referral Rewards: builds the json data column from loot_select form input.
+ *
+ * @param array $data
+ *
+ * @return string
+ */
+function encodeForDataColumn($data) {
+    $types = [
+        'Item'      => 'App\Models\Item\Item',
+        'Currency'  => 'App\Models\Currency\Currency',
+        'LootTable' => 'App\Models\Loot\LootTable',
+        'Raffle'    => 'App\Models\Raffle\Raffle',
+        'Award'     => 'App\Models\Award\Award',
+        'Border'    => 'App\Models\Border\Border',
+    ];
+    $assets = createAssetsArray();
+    foreach ($data['rewardable_type'] ?? [] as $key => $r) {
+        if (!isset($types[$r])) {
+            continue;
+        }
+        $asset = $types[$r]::find($data['rewardable_id'][$key] ?? null);
+        if ($asset) {
+            addAsset($assets, $asset, max(1, (int) ($data['quantity'][$key] ?? 1)));
+        }
+    }
+
+    return json_encode(getDataReadyAssets($assets));
+}
+
+/**
+ * Referral Rewards: a readable list of distributed rewards.
+ *
+ * @param array $rewards
+ *
+ * @return string
+ */
+function getRewardsString($rewards) {
+    $result_elements = [];
+    foreach ($rewards ?: [] as $assetType) {
+        if (isset($assetType)) {
+            foreach ($assetType as $asset) {
+                array_push($result_elements, $asset['asset']->name.(class_basename($asset['asset']) == 'Raffle' ? ' (Raffle Ticket)' : '').' x'.$asset['quantity']);
+            }
+        }
+    }
+
+    return implode(', ', $result_elements);
+}

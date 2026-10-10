@@ -502,6 +502,13 @@ return [
     ],
 
     
+    // REFERRAL
+    905 => [
+        'name'    => 'Referral Rewards',
+        'message' => 'You\'ve received the following rewards for referring {count} user(s): {rewards}',
+        'url'     => '',
+    ],
+
     // BORDER_GRANT
     1106 => [
         'name' => 'Border Grant',

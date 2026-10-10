@@ -20,6 +20,8 @@ class CreateNewUser implements CreatesNewUsers {
      */
     public function create(array $input) {
         (new UserService)->validator($input)->validate();
+        // Referral Rewards: optional referrer must be an existing, active account
+        $referrer = !empty($input['referred_by']) ? User::where('id', $input['referred_by'])->where('is_banned', 0)->where('is_deactivated', 0)->first() : null;
 
         // Create a user with the lowest existing rank
         $rank_id = Rank::orderBy('sort')->first()->id;
@@ -31,6 +33,10 @@ class CreateNewUser implements CreatesNewUsers {
             'rank_id'  => $rank_id,
             'birthday' => $input['dob'],
         ]);
+        if ($referrer) {
+            $user->referred_by = $referrer->id;
+            $user->save();
+        }
         $user->settings()->create([
             'user_id' => $user->id,
         ]);
