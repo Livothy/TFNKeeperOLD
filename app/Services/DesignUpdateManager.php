@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facades\Notifications;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterTitle;
+use App\Models\Character\CharacterTransformation as Transformation;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterFeature;
 use App\Models\Character\CharacterImage;
@@ -39,7 +40,7 @@ class DesignUpdateManager extends Service {
      *
      * @return bool|CharacterDesignUpdate
      */
-    public function createDesignUpdateRequest($character, $user) {
+    public function createDesignUpdateRequest($character, $user, $image = null) {
         DB::beginTransaction();
 
         try {
@@ -53,6 +54,9 @@ class DesignUpdateManager extends Service {
                 throw new \Exception('This '.($character->is_myo_slot ? 'MYO slot' : 'character').' is currently in an open trade or transfer. Please cancel the trade or transfer before creating a design update.');
             }
 
+            // Character Transformations: a request can start from a specific image of this character
+            $image = ($image && $image->character_id == $character->id) ? $image : $character->image;
+
             $data = [
                 'user_id'       => $user->id,
                 'character_id'  => $character->id,
@@ -61,10 +65,13 @@ class DesignUpdateManager extends Service {
                 'fullsize_hash' => randomString(15),
                 'update_type'   => $character->is_myo_slot ? 'MYO' : 'Character',
 
-                // Set some data based on the character's existing stats
-                'rarity_id'     => $character->image->rarity_id,
-                'species_id'    => $character->image->species_id,
-                'subtype_id'    => $character->image->subtype_id,
+                // Set some data based on the image's existing stats
+                'rarity_id'                  => $image->rarity_id,
+                'species_id'                 => $image->species_id,
+                'subtype_id'                 => $image->subtype_id,
+                'transformation_id'          => $image->transformation_id,
+                'transformation_info'        => $image->transformation_info,
+                'transformation_description' => $image->transformation_description,
             ];
 
             $request = CharacterDesignUpdate::create($data);
@@ -74,7 +81,7 @@ class DesignUpdateManager extends Service {
             // This is skipped for MYO slots as it complicates things later on - we don't want
             // users to edit compulsory traits, so we'll only add them when the design is approved.
             if (!$character->is_myo_slot) {
-                foreach ($character->image->features as $feature) {
+                foreach ($image->features as $feature) {
                     $request->features()->create([
                         'character_image_id' => $request->id,
                         'character_type'     => 'Update',
@@ -424,6 +431,22 @@ class DesignUpdateManager extends Service {
             }
             $request->title_id = !empty($data['title_id']) && $data['title_id'] != 'custom' ? $data['title_id'] : null;
             $request->title_data = !empty($data['title_id']) && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
+            // Character Transformations (a MYO slot's preset transformation can't be changed)
+            $base = $request->character->image;
+            if ($request->character->is_myo_slot && $base->transformation_id) {
+                $transformation = $base->transformation;
+            } else {
+                $transformation = !empty($data['transformation_id']) ? Transformation::find($data['transformation_id']) : null;
+                if (!empty($data['transformation_id']) && !$transformation) {
+                    throw new \Exception('Invalid '.__('transformations.transformation').' selected.');
+                }
+            }
+            if ($transformation && $transformation->species_id && $transformation->species_id != $species->id) {
+                throw new \Exception(ucfirst(__('transformations.transformation')).' does not match the species.');
+            }
+            $request->transformation_id = $transformation ? $transformation->id : null;
+            $request->transformation_info = ($request->character->is_myo_slot && $base->transformation_info) ? $base->transformation_info : (($data['transformation_info'] ?? null) ?: null);
+            $request->transformation_description = ($request->character->is_myo_slot && $base->transformation_description) ? $base->transformation_description : (($data['transformation_description'] ?? null) ?: null);
             $request->has_features = 1;
             $request->save();
 
@@ -585,6 +608,9 @@ class DesignUpdateManager extends Service {
                 'rarity_id'          => $request->rarity_id,
                 'title_id'           => $request->title_id ?: null,
                 'title_data'         => $request->title_data ? json_encode($request->title_data) : null,
+                'transformation_id'          => $request->transformation_id ?: null,
+                'transformation_info'        => $request->transformation_info ?: null,
+                'transformation_description' => $request->transformation_description ?: null,
                 'sort'               => 0,
             ]);
 

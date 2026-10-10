@@ -13,6 +13,7 @@ use App\Models\Feature\Feature;
 use App\Models\Marking\Marking;
 use App\Models\Rarity;
 use App\Models\Character\CharacterTitle;
+use App\Models\Character\CharacterTransformation as Transformation;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\Trade;
@@ -58,6 +59,7 @@ class CharacterController extends Controller {
             'markings'    => ['' => 'Select Markings(s)'] + Marking::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
             'bases'       => ['' => 'Select Base(s)'] + Base::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'    => ['0' => 'Pick a Species First'],
+            'transformations' => ['0' => 'Pick a Species First'],
             'features'    => Feature::getDropdownItems(1),
             'isMyo'       => false,
             'titles' => ['0' => 'Select Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
@@ -77,6 +79,7 @@ class CharacterController extends Controller {
             'markings'    => ['' => 'Select Markings(s)'] + Marking::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
             'bases'       => ['' => 'Select Base(s)'] + Base::orderBy('name', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'    => ['0' => 'Pick a Species First'],
+            'transformations' => ['0' => 'Pick a Species First'],
             'features'    => Feature::getDropdownItems(1),
             'isMyo'       => true,
         ]);
@@ -93,6 +96,19 @@ class CharacterController extends Controller {
         return view('admin.masterlist._create_character_subtype', [
             'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id', '=', $species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'isMyo'    => $request->input('myo'),
+        ]);
+    }
+
+    /**
+     * Shows the edit image transformation portion of the modal.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateCharacterMyoTransformation(Request $request) {
+        $species = $request->input('species');
+        return view('admin.masterlist._create_character_transformation', [
+            'transformations' => ['0' => 'Select '.ucfirst(__('transformations.transformation'))] + Transformation::where('species_id','=',$species)->orWhereNull('species_id')->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'isMyo'           => $request->input('myo'),
         ]);
     }
 
@@ -114,7 +130,7 @@ class CharacterController extends Controller {
             'artist_id', 'artist_url',
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'marking_id', 'is_dominant', 'base', 'secondary_base', 'side_id',
             'marking_color_0', 'marking_color_1', 'is_chimera',
-            'image', 'thumbnail', 'image_description',
+            'image', 'thumbnail', 'image_description', 'transformation_id', 'transformation_info', 'transformation_description',
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'title_id', 'title_data',
             'image', 'thumbnail', 'image_description'
         ]);
@@ -152,7 +168,7 @@ class CharacterController extends Controller {
             'artist_id', 'artist_url',
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'marking_id', 'is_dominant', 'base', 'secondary_base', 'side_id',
             'marking_color_0', 'marking_color_1', 'is_chimera',
-            'image', 'thumbnail',
+            'image', 'thumbnail', 'transformation_id', 'transformation_info', 'transformation_description',
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
             flash('MYO slot created successfully.')->success();

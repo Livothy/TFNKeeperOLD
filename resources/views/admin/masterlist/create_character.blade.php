@@ -244,6 +244,19 @@
             {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control']) !!}
         </div>
 
+        <h5>{{ ucfirst(__('transformations.transformations')) }}</h5>
+        <div class="form-group" id="transformations">
+            {!! Form::label(ucfirst(__('transformations.transformation')) . ' (Optional)') !!} {!! add_help('This will make the image have the selected ' . __('transformations.transformation') . ' id.') !!}
+            {!! Form::select('transformation_id', $transformations, old('transformation_id'), ['class' => 'form-control']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label(ucfirst(__('transformations.transformation')) . ' Tab Info (Optional)') !!}{!! add_help('This is text that will show alongside the ' . __('transformations.transformation') . ' name in the tabs, so try to keep it short.') !!}
+            {!! Form::text('transformation_info', old('transformation_info'), ['class' => 'form-control mr-2', 'placeholder' => 'Tab Info (Optional)']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label(ucfirst(__('transformations.transformation')) . ' Origin/Lore (Optional)') !!}{!! add_help('This is text that will show alongside the ' . __('transformations.transformation') . ' name on the image info area. Explains why the character takes this form, how, etc. Should be pretty short.') !!}
+            {!! Form::text('transformation_description', old('transformation_description'), ['class' => 'form-control mr-2', 'placeholder' => 'Origin Info (Optional)']) !!}
+        </div>
         <div class="form-group">
             {!! Form::label('Traits') !!} @if ($isMyo)
                 {!! add_help(
@@ -287,9 +300,6 @@
     </div>
     @endif
 
-    <div class="form-group">
-        {!! Form::label('Traits') !!} @if($isMyo) {!! add_help('These traits will be listed as required traits for the slot. The user will still be able to add on more traits, but not be able to remove these. This is allowed to conflict with the rarity above; you may add traits above the character\'s specified rarity.') !!} @endif
-        <div id="featureList">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -342,6 +352,18 @@
 @section('scripts')
     @parent
     @include('widgets._character_create_options_js')
+    <script>
+        // Character Transformations: reload the list for the chosen species
+        $('#species').change(function() {
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/masterlist/check-transformation') }}?species=" + $(this).val() + "&myo={{ $isMyo ? 1 : '' }}",
+                dataType: "text"
+            }).done(function(res) {
+                $("#transformations").html(res);
+            });
+        });
+    </script>
     @include('widgets._image_upload_js')
     @include('widgets._datetimepicker_js')
     @include('widgets._markingbases_js', [])

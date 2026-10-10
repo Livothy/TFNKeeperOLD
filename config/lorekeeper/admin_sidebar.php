@@ -247,6 +247,10 @@ return [
                 'name' => 'Criteria Rewards',
                 'url'  => 'admin/data/criteria',
             ],
+            [
+                'name' => 'Transformations',
+                'url'  => 'admin/data/transformations',
+            ],
         ],
     ],
     'Raids'       => [

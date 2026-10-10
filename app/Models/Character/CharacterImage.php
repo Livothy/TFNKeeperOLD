@@ -24,7 +24,7 @@ class CharacterImage extends Model {
         'extension', 'use_cropper', 'hash', 'fullsize_hash', 'fullsize_extension', 'sort',
         'x0', 'x1', 'y0', 'y1',
         'description', 'parsed_description',
-        'is_valid', 'longest_side',
+        'is_valid', 'longest_side', 'transformation_id', 'transformation_info', 'transformation_description',
     ];
 
     /**
@@ -149,6 +149,13 @@ class CharacterImage extends Model {
      */
     public function artists() {
         return $this->hasMany(CharacterImageCreator::class, 'character_image_id')->where('type', 'Artist')->where('character_type', 'Character');
+    }
+
+    /**
+     * Get the transformation of the character image.
+     */
+    public function transformation() {
+        return $this->belongsTo('App\Models\Character\CharacterTransformation', 'transformation_id');
     }
 
     /**********************************************************************************************

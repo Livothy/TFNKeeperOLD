@@ -26,6 +26,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
+use App\Models\Rarity;
+use App\Models\Currency\Currency;
+use App\Models\Feature\Feature;
+use App\Models\Character\CharacterTransformation as Transformation;
 
 class CharacterManager extends Service {
     /*
@@ -651,6 +655,7 @@ class CharacterManager extends Service {
             $old['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
             $old['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
             $old['title'] = $image->title_id ? CharacterTitle::find($image->title_id)?->displayName : ($image->title_data ? $image->title_data : null);
+            $old['transformation'] = $image->transformation_id ? Transformation::find($image->transformation_id)?->displayName : null;
 
             // Clear old features
             $image->features()->delete();
@@ -668,6 +673,9 @@ class CharacterManager extends Service {
             $image->rarity_id = $data['rarity_id'];
             $image->title_id = !empty($data['title_id']) && $data['title_id'] != 'custom' ? $data['title_id'] : null;
             $image->title_data = !empty($data['title_id']) && !empty(array_filter($data['title_data'] ?? [])) ? json_encode($data['title_data']) : null;
+            $image->transformation_id = ($data['transformation_id'] ?? null) ?: null;
+            $image->transformation_info = ($data['transformation_info'] ?? null) ?: null;
+            $image->transformation_description = ($data['transformation_description'] ?? null) ?: null;
             $image->save();
 
             $new = [];
@@ -676,6 +684,9 @@ class CharacterManager extends Service {
             $new['subtype'] = $image->subtype_id ? $image->subtype->displayName : null;
             $new['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
             $new['title'] = $image->title_id ? CharacterTitle::find($image->title_id)?->displayName : ($image->title_data ? $image->title_data : null);
+            $new['transformation'] = $image->transformation_id ? Transformation::find($image->transformation_id)?->displayName : null;
+            $new['transformation_info'] = $image->transformation_info ? $image->transformation_info : null;
+            $new['transformation_description'] = $image->transformation_description ? $image->transformation_description : null;
 
             // Character also keeps track of these features
             $image->character->rarity_id = $image->rarity_id;
@@ -2080,6 +2091,10 @@ class CharacterManager extends Service {
                 'species_id', 'subtype_id', 'rarity_id', 'use_cropper',
                 'x0', 'x1', 'y0', 'y1',
             ]);
+            // Character Transformations
+            foreach (['transformation_id', 'transformation_info', 'transformation_description'] as $field) {
+                $imageData[$field] = ($data[$field] ?? null) ?: null;
+            }
             $imageData['use_cropper'] = isset($data['use_cropper']);
             $imageData['description'] = $data['image_description'] ?? null;
             $imageData['parsed_description'] = parse($imageData['description']);

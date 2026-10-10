@@ -34,6 +34,19 @@
         </div>
     </div>
 
+<h5>{{ ucfirst(__('transformations.transformations')) }}</h5>
+<div class="form-group" id="transformations">
+    {!! Form::label(ucfirst(__('transformations.transformation')) . ' (Optional)') !!}
+    {!! Form::select('transformation_id', $transformations, $image->transformation_id, ['class' => 'form-control', 'id' => 'transformation']) !!}
+</div>
+<div class="form-group">
+    {!! Form::label(ucfirst(__('transformations.transformation')) . ' Tab Info (Optional)') !!}{!! add_help('This is text that will show alongside the ' . __('transformations.transformation') . ' name in the tabs, so try to keep it short.') !!}
+    {!! Form::text('transformation_info', $image->transformation_info, ['class' => 'form-control mr-2', 'placeholder' => 'Tab Info (Optional)']) !!}
+</div>
+<div class="form-group">
+    {!! Form::label(ucfirst(__('transformations.transformation')) . ' Origin/Lore (Optional)') !!}{!! add_help('This is text that will show alongside the ' . __('transformations.transformation') . ' name on the image info area. Explains why the character takes this form, how, etc. Should be pretty short.') !!}
+    {!! Form::text('transformation_description', $image->transformation_description, ['class' => 'form-control mr-2', 'placeholder' => 'Origin Info (Optional)']) !!}
+</div>
 <div class="form-group">
     {!! Form::label('Traits') !!}
     <div><a href="#" class="btn btn-primary mb-2" id="add-feature">Add Trait</a></div>
@@ -146,4 +159,14 @@
         });
 
     };
+        // Character Transformations: reload the list for the chosen species
+        $('#species').change(function() {
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/character/image/traits/transformation') }}?species=" + $(this).val() + "&id={{ $image->id }}",
+                dataType: "text"
+            }).done(function(res) {
+                $("#transformations").html(res);
+            });
+        });
 </script>

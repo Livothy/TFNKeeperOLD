@@ -32,6 +32,14 @@
                     {!! Form::label('title_data', 'Custom Title: ') !!}
                     {!! Form::text('title_data', Request::get('title_data'), ['class' => 'form-control mr-2', 'style' => 'width: 250px']) !!}
                 </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('transformation_id', ucfirst(__('transformations.transformation')).': ') !!}
+                    {!! Form::select('transformation_id', $transformations, Request::get('transformation_id'), ['class' => 'form-control']) !!}
+                </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('has_transformation', 'Has a '.ucfirst(__('transformations.transformation')).': ') !!}
+                    {!! Form::select('has_transformation', ['1' => 'Has a '.__('transformations.transformation').'.'], Request::get('has_transformation'), ['class' => 'form-control', 'placeholder' => 'Any']) !!}
+                </div>
                 <hr />
             @endif
             <div class="masterlist-search-field">
