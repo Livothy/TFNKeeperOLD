@@ -83,6 +83,8 @@ class SubmissionController extends Controller {
             'count'               => Submission::where('prompt_id', $submission->prompt_id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
             'awards'              => Award::orderBy('name')->released()->where('is_user_owned', 1)->pluck('name', 'id'),
             'characterAwards'     => Award::orderBy('name')->released()->where('is_character_owned', 1)->pluck('name', 'id'),
+            // Trait Prompt Reward (staff-only)
+            'features'            => \App\Models\Feature\Feature::orderBy('name')->pluck('name', 'id'),
         ] : []));
     }
 
@@ -146,6 +148,8 @@ class SubmissionController extends Controller {
             'rewardsData'         => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null,
             'awards'              => Award::orderBy('name')->released()->where('is_user_owned', 1)->pluck('name', 'id'),
             'characterAwards'     => Award::orderBy('name')->released()->where('is_character_owned', 1)->pluck('name', 'id'),
+            // Trait Prompt Reward (staff-only)
+            'features'            => \App\Models\Feature\Feature::orderBy('name')->pluck('name', 'id'),
         ] : []));
     }
 

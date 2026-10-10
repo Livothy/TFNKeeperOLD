@@ -331,4 +331,13 @@ class Feature extends Model {
             return self::where('is_visible', '>=', $visibleOnly)->orderBy('name')->pluck('name', 'id')->toArray();
         }
     }
+
+    /**
+     * Trait Prompt Reward: asset type for asset management.
+     *
+     * @return string
+     */
+    public function getAssetTypeAttribute() {
+        return 'features';
+    }
 }

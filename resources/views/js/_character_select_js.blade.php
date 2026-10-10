@@ -71,6 +71,9 @@
                     $cell.children('.character-tables').addClass('show');
                     $cell.children('.character-tables').addClass('show');
                     $cell.children('.character-tables').removeClass('hide');
+                } else if (val == 'Feature') {
+                    $cell.children('.character-features').addClass('show');
+                    $cell.children('.character-features').removeClass('hide');
                 }
             });
         }
@@ -82,6 +85,7 @@
             node.find('.character-currency-id').attr('name', 'character_rewardable_id[' + id + '][]');
             node.find('.character-item-id').attr('name', 'character_rewardable_id[' + id + '][]');
             node.find('.character-award-id').attr('name', 'character_rewardable_id[' + id + '][]');
+            node.find('.character-feature-id').attr('name', 'character_rewardable_id[' + id + '][]');
             node.find('.character-table-id').attr('name', 'character_rewardable_id[' + id + '][]');
         }
 

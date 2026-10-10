@@ -74,7 +74,7 @@ function getAssetKeys($isCharacter = false) {
     if (!$isCharacter) {
         return ['items', 'currencies', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'awards', 'user_awards', 'borders'];
     } else {
-        return ['currencies', 'items', 'character_items', 'loot_tables', 'awards'];
+        return ['currencies', 'items', 'character_items', 'loot_tables', 'awards', 'features'];
     }
 }
 
@@ -158,6 +158,14 @@ function getAssetModelString($type, $namespaced = true) {
                 return '\App\Models\Border\Border';
             } else {
                 return 'Border';
+            }
+            break;
+
+        case 'features':
+            if ($namespaced) {
+                return '\App\Models\Feature\Feature';
+            } else {
+                return 'Feature';
             }
             break;
 
@@ -429,6 +437,16 @@ function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $sub
             foreach ($contents as $asset) {
                 if (!$service->creditAward($sender, ($asset['asset']->is_character_owned ? $recipient : $item_recipient), $logType, $data, $asset['asset'], $asset['quantity'])) {
                     return false;
+                }
+            }
+        } elseif ($key == 'features' && count($contents)) {
+            // Trait Prompt Reward: add the trait to the character's current image (once; quantity is ignored)
+            if (!$recipient->image) {
+                return false;
+            }
+            foreach ($contents as $asset) {
+                if (!$recipient->image->features()->where('feature_id', $asset['asset']->id)->exists()) {
+                    \App\Models\Character\CharacterFeature::create(['character_image_id' => $recipient->image->id, 'feature_id' => $asset['asset']->id, 'data' => null, 'character_type' => 'Character']);
                 }
             }
         }

@@ -442,6 +442,7 @@ class SubmissionManager extends Service {
             $itemIds = [];
             $tableIds = [];
             $awardIds = [];
+            $featureIds = [];
             if (isset($data['character_currency_id'])) {
                 foreach ($data['character_currency_id'] as $c) {
                     foreach ($c as $currencyId) {
@@ -461,6 +462,8 @@ class SubmissionManager extends Service {
                                 break;
                             case 'Award': $awardIds[] = $id;
                                 break;
+                            case 'Feature': $featureIds[] = $id;
+                                break;
                         }
                     }
                 } // Expanded character rewards
@@ -473,6 +476,7 @@ class SubmissionManager extends Service {
             $items = Item::whereIn('id', $itemIds)->get()->keyBy('id');
             $tables = LootTable::whereIn('id', $tableIds)->get()->keyBy('id');
             $awards = Award::whereIn('id', $awardIds)->get()->keyBy('id');
+            $features = \App\Models\Feature\Feature::whereIn('id', $featureIds)->get()->keyBy('id');
 
             // We're going to remove all characters from the submission and reattach them with the updated data
             $submission->characters()->delete();
@@ -480,7 +484,7 @@ class SubmissionManager extends Service {
             // Distribute character rewards
             foreach ($characters as $c) {
                 // Users might not pass in clean arrays (may contain redundant data) so we need to clean that up
-                $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies, 'items' => $items, 'tables' => $tables, 'awards' => $awards], true);
+                $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies, 'items' => $items, 'tables' => $tables, 'awards' => $awards, 'features' => $features], true);
 
                 if (!$assets = fillCharacterAssets($assets, $user, $c, $promptLogType, $promptData, $submission->user)) {
                     throw new \Exception('Failed to distribute rewards to character.');
@@ -637,6 +641,9 @@ class SubmissionManager extends Service {
                         } break;
                         case 'Award': if ($data['character_rewardable_quantity'][$data['character_id']][$key]) {
                             addAsset($assets, $data['awards'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]);
+                        } break;
+                        case 'Feature': if ($data['character_rewardable_quantity'][$data['character_id']][$key] && isset($data['features'][$reward])) {
+                            addAsset($assets, $data['features'][$reward], 1);
                         } break;
                     }
                 }
